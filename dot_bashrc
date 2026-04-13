@@ -1,0 +1,84 @@
+# Start profiling
+__profile_start=$(date +%s%3N)
+
+# Oh My Posh theme
+__omp_theme="amro-custom"
+
+# Preserve original PROMPT_COMMAND
+__original_prompt_command="$PROMPT_COMMAND"
+
+# UTF-8 enforcement
+export LANG="pt_BR.UTF-8"
+export LC_ALL="pt_BR.UTF-8"
+
+# Environment variables
+export EDITOR="nvim"
+
+# Loads OhMyPosh
+eval "$(oh-my-posh init bash --config "$POSH_THEMES_PATH/$__omp_theme.omp.json")"
+
+# Yazi function: cd to last used directory
+function y() {
+    tmp=$(mktemp)
+    yazi "$@" --cwd-file="$tmp"
+    cwd=$(<"$tmp")
+    if [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        cd "$cwd"
+    fi
+    rm -f "$tmp"
+}
+
+# Zoxide alias
+function z() {
+    cd "$@"
+}
+function zi() {
+    cdi "$@"
+}
+
+# Virtual environment activation
+function venv() {
+    if [ -f "./.venv/bin/activate" ]; then
+        echo "Activating virtual environment..."
+        source "./.venv/bin/activate"
+    else
+        echo "No virtual environment found in this directory."
+    fi
+}
+
+# Enables fzf
+if [ -f ~/.fzf.bash ]; then
+    source ~/.fzf.bash
+fi
+
+function f() {
+    fzf "$@"
+}
+
+export FZF_COMPLETION_TRIGGER='*'
+
+# Quick directory jumps
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# Enables command autocompletion
+if [ -f /etc/bash_completion ]; then
+	. /etc/bash_completion
+fi
+
+# Zoxide init
+eval "$(zoxide init --cmd cd bash)"
+
+# Calls for colorscript
+alias colorscript="bash ~/.colorscripts/colorscript.sh"
+export DIR_COLORSCRIPTS="$HOME/.colorscripts/colorscripts"
+export PATH="$HOME/.local/bin:$PATH"
+
+# End profiling
+__profile_end=$(date +%s%3N)
+__profile_elapsed=$((__profile_end - __profile_start))
+echo "Profile loaded in ${__profile_elapsed} ms."
+
+
+# opencode
+export PATH=/c/Users/Felipe/.opencode/bin:$PATH
