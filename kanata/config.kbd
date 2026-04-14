@@ -1,0 +1,47 @@
+(defcfg
+  process-unmapped-keys yes
+)
+
+;; ; = ç
+;; Slash = ; (no teclado)
+
+(defsrc
+  caps 
+  a s d f
+  j k l ; 
+  ScrollLock
+)
+
+(defvar
+  tap-time 200
+  hold-time1 165 ;;1st finger - Index
+  hold-time2 200 ;;2nd finger - Middle
+  hold-time3 230 ;;3rd finger - Ring
+  ;; hold-time4 230 ;;4th finger - Pinky
+  hold-time4 500 ;;4th finger - Pinky
+  hold-time5 210 ;;5th finger - Thumb
+)
+
+(defalias
+  caps-mod(tap-hold 100 $hold-time4 esc caps)
+
+  a-mod (tap-hold $tap-time $hold-time4 a lmet)
+  s-mod (tap-hold $tap-time $hold-time3 s lalt)
+  d-mod (tap-hold $tap-time $hold-time2 d lctrl)
+  f-mod (tap-hold $tap-time $hold-time1 f lsft)
+
+  j-mod (tap-hold $tap-time $hold-time1 j rsft)
+  k-mod (tap-hold $tap-time $hold-time2 k rctrl)
+  l-mod (tap-hold $tap-time $hold-time3 l lalt)
+  ;-mod (tap-hold $tap-time $hold-time4 ; rmet)
+  scroll-mod1 (tap-hold 300 1000 (layer-switch no-home-row) ScrollLock)
+  scroll-mod2 (tap-hold 300 1000 lrld ScrollLock)
+)
+
+(deflayer modded
+  @caps-mod      @a-mod @s-mod @d-mod @f-mod                @j-mod @k-mod @l-mod @;-mod @scroll-mod1
+)
+
+(deflayer no-home-row
+  @caps-mod a s d f j k l ; @scroll-mod2
+)

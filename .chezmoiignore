@@ -1,0 +1,11 @@
+README*
+LICENSE*
+.gitignore
+
+opencode/node_modules
+opencode/package.json
+opencode/bun.lock
+
+{{ if ne .chezmoi.os "windows" }}
+.chezmoiscripts/symlink-nvim-windows.ps1 # Stops the symlink from being generated on other OSes
+{{ end }}

@@ -1,0 +1,111 @@
+# Start profiling
+__profile_start=$(date +%s%3N)
+
+# UTF-8 enforcement
+export LANG="pt_BR.UTF-8"
+export LC_ALL="pt_BR.UTF-8"
+
+# Environment variables
+export EDITOR="nvim"
+export VISUAL="nvim"
+export PATH="$HOME/.local/bin:$PATH"
+
+# Load Starship
+eval "$(starship init zsh)"
+
+# Configure ZINIT
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+if [ !-d "$ZINIT_HOME" ]; then
+    mkdir -p "$(dirname $ZINIT_HOME)"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Connect plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# Test this later
+zinit light olets/zsh-transient-prompt
+
+# Snippets
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::archlinux
+zinit snippet OMZP::command-not-found
+
+# Auto load completion engine
+autoload -U compinit && compinit
+
+zinit cdreplay -q
+
+# History configuration for completion list persistence
+HISTSIZE=1000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space # Does not save command in history when it is preceded by a space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+
+# Configure keybindings
+bindkey -e
+bindkey '^n' history-search-forward
+bindkey '^p' history-search-backward
+
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+# Shell integrations
+eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
+
+# Aliases
+alias ls='ls --color'
+alias z='cd'
+alias zi='cdi'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# export FZF_COMPLETION_TRIGGER='*'
+
+
+# Yazi function: cd to last used directory
+function y() {
+    tmp=$(mktemp)
+    yazi "$@" --cwd-file="$tmp"
+    cwd=$(<"$tmp")
+    if [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        z "$cwd"
+    fi
+    rm -f "$tmp"
+}
+
+# Virtual environment activation
+function venv() {
+    if [ -f "./.venv/bin/activate" ]; then
+        echo "Activating virtual environment..."
+        source "./.venv/bin/activate"
+    else
+        echo "No virtual environment found in this directory."
+    fi
+}
+
+# End profiling
+__profile_end=$(date +%s%3N)
+__profile_elapsed=$((__profile_end - __profile_start))
+echo "Profile loaded in ${__profile_elapsed} ms."
+
+# opencode
+export PATH=/c/Users/Felipe/.opencode/bin:$PATH

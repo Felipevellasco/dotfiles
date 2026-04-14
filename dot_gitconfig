@@ -1,0 +1,25 @@
+[core]
+	editor = "nvim"
+	autocrlf = true
+[user]
+	name = Felipe Vellasco
+	email = vellascofelipe@gmail.com
+[diff]
+	tool = vscode
+[difftool "vscode"]
+	cmd = "code --wait --diff $LOCAL $REMOTE"
+[i18n]
+	logOutputEncoding = utf-8
+[alias]
+	pr = pull --rebase
+	s = status -s
+	ss = status
+	a = add -A
+	l = log --oneline --graph --all
+	ll = log
+	c = commit
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f

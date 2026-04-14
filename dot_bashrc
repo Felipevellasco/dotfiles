@@ -79,6 +79,5 @@ __profile_end=$(date +%s%3N)
 __profile_elapsed=$((__profile_end - __profile_start))
 echo "Profile loaded in ${__profile_elapsed} ms."
 
-
 # opencode
 export PATH=/c/Users/Felipe/.opencode/bin:$PATH
