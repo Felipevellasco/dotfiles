@@ -12,5 +12,5 @@ I am planning on expanding the repository to support Ansible playbooks and also 
 
 ```bash
 export GITHUB_USERNAME=Felipevellasco
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply $GITHUB_USERNAME
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply git@github.com:$GITHUB_USERNAME/dotfiles.git
 ```
