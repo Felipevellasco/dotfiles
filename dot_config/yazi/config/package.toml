@@ -1,0 +1,39 @@
+[[plugin.deps]]
+use = "dedukun/relative-motions"
+rev = "a603d9e"
+hash = "4841d0db6a2380a16fd8c647fc1d1187"
+
+[[plugin.deps]]
+use = "boydaihungst/mediainfo"
+rev = "1099409"
+hash = "339ddb907a575a5ee5b0c9c7f0f41e17"
+
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "cfb9140"
+hash = "153b2c1afc54355f68359713281dd99d"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "eaf6920"
+hash = "89b8b94d43550d8ab9c4b5e969005e79"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:piper"
+rev = "eaf6920"
+hash = "29c3b04bad99946223dc83da1d13153a"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "ba27774"
+hash = "2970b92f06b9a1c60a0be8ec61759aea"
+
+[[flavor.deps]]
+use = "kmlupreti/ayu-dark"
+rev = "648a178"
+hash = "2ebdd4e3e00d6612bfa64dd7ca3dac4f"
+
+[[flavor.deps]]
+use = "AdithyanA2005/nord"
+rev = "3a791e9"
+hash = "34f6d3974ebca066f4fe962715e0d78c"

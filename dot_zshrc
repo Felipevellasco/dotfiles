@@ -1,17 +1,12 @@
+#!/usr/bin/env bash
+# vim: filetype=bash :
+
 # Start profiling
 __profile_start=$(date +%s%3N)
 
-# UTF-8 enforcement (Verified via locale-gen)
-export LANG="pt_BR.UTF-8"
-export LC_ALL="pt_BR.UTF-8"
-
-# Environment variables
-export EDITOR="nvim"
-export VISUAL="nvim"
-export PATH="$HOME/.local/bin:$PATH"
-
-# opencode - Fixed for WSL /mnt/ pathing
-export PATH="/mnt/c/Users/Felipe/.opencode/bin:$PATH"
+if [ -f "$HOME/.shell_environment" ]; then
+    source "$HOME/.shell_environment"
+fi
 
 # Load Starship (Immediate load for prompt visibility)
 eval "$(starship init zsh)"
@@ -26,8 +21,9 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 # --- Plugins (Turbo Mode: wait'0') ---
 
-zinit ice wait'0' lucid
-zinit light zsh-users/zsh-syntax-highlighting
+# Plugin made the shell sluggish
+# zinit ice wait'0' lucid
+# zinit light zsh-users/zsh-syntax-highlighting
 
 zinit ice wait'0' lucid
 zinit light zsh-users/zsh-completions
@@ -75,32 +71,9 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # --- Functions and aliases ---
 
-alias ls='ls --color'
-alias z='cd'
-alias zi='cdi'
-alias ..='cd ..'
-alias ...='cd ../..'
-
-# Yazi: cd to last used directory
-function y() {
-    tmp=$(mktemp)
-    yazi "$@" --cwd-file="$tmp"
-    cwd=$(<"$tmp")
-    if [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        z "$cwd"
-    fi
-    rm -f "$tmp"
-}
-
-# Python Virtual environment activation
-function venv() {
-    if [ -f "./.venv/bin/activate" ]; then
-        echo "Activating virtual environment..."
-        source "./.venv/bin/activate"
-    else
-        echo "No virtual environment found in this directory."
-    fi
-}
+if [ -f "$HOME/.shell_common" ]; then
+    source "$HOME/.shell_common"
+fi
 
 # End profiling
 __profile_end=$(date +%s%3N)

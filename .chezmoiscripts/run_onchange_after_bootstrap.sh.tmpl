@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# vim: ft=bash :
+
+# Yazi dependencies hash computation
+# {{ include "dot_config/yazi/config/package.toml" | sha256sum }}
+
+FILE='bootstrap'
+
+DIRS=(".config/yazi" ".config/.opencode")
+
+for dir in ${DIRS[@]}; do
+	local file="$HOME/$dir/$FILE"
+	if [ -f "$file" ]; then
+		source "$file"
+	else
+		echo "WARNING: bootstrapping script not found for project $dir."
+		echo "Consider removing the folder from the database or creating a 'bootstrap' shell script."
+	fi
+done

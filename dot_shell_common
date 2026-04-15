@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# vim: filetype=sh :
+
+alias ls='ls -larc'
+alias grep='grep -in --color=auto'
+alias z='cd'
+alias zi='cdi'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# Yazi: cd to last used directory
+y() {
+    tmp=$(mktemp)
+    yazi "$@" --cwd-file="$tmp"
+    cwd=$(<"$tmp")
+    if [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        z "$cwd"
+    fi
+    rm -f "$tmp"
+}
+
+# Python Virtual environment activation
+venv() {
+    if [ -f "./.venv/bin/activate" ]; then
+        echo "Activating virtual environment..."
+        source "./.venv/bin/activate"
+    elif [ -f "./.venv/scripts/activate" ]; then
+        echo "Activating virtual environment..."
+        source "./.venv/scripts/activate"
+    else
+        echo "No virtual environment found in this directory."
+    fi
+}
+
+
