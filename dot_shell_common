@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # vim: filetype=sh :
 
-alias ls='ls -larc'
+alias ls='ls -lAr --color'
 alias grep='grep -in --color=auto'
 alias z='cd'
 alias zi='cdi'
 alias ..='cd ..'
 alias ...='cd ../..'
+alias py='python'
 
 # Yazi: cd to last used directory
 y() {

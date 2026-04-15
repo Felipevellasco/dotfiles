@@ -10,12 +10,22 @@
 # : Flavor {{{
 
 [flavor]
-#dark  = "ayu-dark"
-#dark  = "nord"
-dark  = "catppuccin-mocha"
+dark = "tokyo-night"
+# dark = "ayu-dark"
+# dark = "nord"
+# dark = "catppuccin-mocha"
 
-#light = "ayu-dark"
-#light  = "nord"
-light  = "catppuccin-mocha"
+light = "tokyo-night"
+# light = "ayu-dark"
+# light = "nord"
+# light = "catppuccin-mocha"
 
 # : }}}
+
+# Removes rounded borders
+[indicator]
+padding = { open = "█", close = "█" }
+
+[status]
+sep_left = { open = "█", close = "" }
+sep_right = { open = "", close = "█" }

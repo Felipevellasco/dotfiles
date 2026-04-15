@@ -2,14 +2,14 @@
 # vim: ft=bash :
 
 # Yazi dependencies hash computation
-# {{ include "dot_config/yazi/config/package.toml" | sha256sum }}
+# {{ include "dot_config/yazi/package.toml" | sha256sum }}
 
 FILE='bootstrap'
 
 DIRS=(".config/yazi" ".config/.opencode")
 
 for dir in ${DIRS[@]}; do
-	local file="$HOME/$dir/$FILE"
+	file="$HOME/$dir/$FILE"
 	if [ -f "$file" ]; then
 		source "$file"
 	else
