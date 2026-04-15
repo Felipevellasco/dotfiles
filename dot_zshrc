@@ -1,7 +1,7 @@
 # Start profiling
 __profile_start=$(date +%s%3N)
 
-# UTF-8 enforcement
+# UTF-8 enforcement (Verified via locale-gen)
 export LANG="pt_BR.UTF-8"
 export LC_ALL="pt_BR.UTF-8"
 
@@ -10,52 +10,58 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export PATH="$HOME/.local/bin:$PATH"
 
-# Load Starship
+# opencode - Fixed for WSL /mnt/ pathing
+export PATH="/mnt/c/Users/Felipe/.opencode/bin:$PATH"
+
+# Load Starship (Immediate load for prompt visibility)
 eval "$(starship init zsh)"
 
 # Configure ZINIT
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-
-if [ !-d "$ZINIT_HOME" ]; then
+if [ ! -d "$ZINIT_HOME" ]; then
     mkdir -p "$(dirname $ZINIT_HOME)"
     git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
-
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Connect plugins
+# --- Plugins (Turbo Mode: wait'0') ---
+
+zinit ice wait'0' lucid
 zinit light zsh-users/zsh-syntax-highlighting
+
+zinit ice wait'0' lucid
 zinit light zsh-users/zsh-completions
+
+zinit ice wait'0' lucid
 zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
 
-# Test this later
-zinit light olets/zsh-transient-prompt
+# Standard Shell Integrations (Using local binaries for speed)
+eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 
-# Snippets
+# Snippets from Oh-My-Zsh
+zinit ice wait'0' lucid
 zinit snippet OMZP::git
+zinit ice wait'0' lucid
 zinit snippet OMZP::sudo
+zinit ice wait'0' lucid
 zinit snippet OMZP::archlinux
+zinit ice wait'0' lucid
 zinit snippet OMZP::command-not-found
 
-# Auto load completion engine
-autoload -U compinit && compinit
+# Final completion kickstart - Run ONLY ONCE after plugins load
+zinit ice wait'0' lucid atinit'zpcompinit; zpcdreplay'
+zinit light Aloxaf/fzf-tab
 
-zinit cdreplay -q
+# --- Configuration ---
 
-# History configuration for completion list persistence
+# History persistence
 HISTSIZE=1000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
-HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space # Does not save command in history when it is preceded by a space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
+setopt appendhistory sharehistory hist_ignore_space hist_ignore_all_dups hist_save_no_dups
 
-# Configure keybindings
+# Keybindings
 bindkey -e
 bindkey '^n' history-search-forward
 bindkey '^p' history-search-backward
@@ -67,21 +73,15 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-# Shell integrations
-eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+# --- Functions and aliases ---
 
-# Aliases
 alias ls='ls --color'
 alias z='cd'
 alias zi='cdi'
 alias ..='cd ..'
 alias ...='cd ../..'
 
-# export FZF_COMPLETION_TRIGGER='*'
-
-
-# Yazi function: cd to last used directory
+# Yazi: cd to last used directory
 function y() {
     tmp=$(mktemp)
     yazi "$@" --cwd-file="$tmp"
@@ -92,7 +92,7 @@ function y() {
     rm -f "$tmp"
 }
 
-# Virtual environment activation
+# Python Virtual environment activation
 function venv() {
     if [ -f "./.venv/bin/activate" ]; then
         echo "Activating virtual environment..."
@@ -106,6 +106,3 @@ function venv() {
 __profile_end=$(date +%s%3N)
 __profile_elapsed=$((__profile_end - __profile_start))
 echo "Profile loaded in ${__profile_elapsed} ms."
-
-# opencode
-export PATH=/c/Users/Felipe/.opencode/bin:$PATH

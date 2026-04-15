@@ -1,6 +1,11 @@
 [core]
 	editor = "nvim"
+{{- if eq .chezmoi.os "windows" }}
 	autocrlf = true
+{{- else }}
+	autocrlf = input
+{{- end }}
+
 [user]
 	name = Felipe Vellasco
 	email = vellascofelipe@gmail.com
