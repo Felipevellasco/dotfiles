@@ -1,11 +1,17 @@
 README*
 LICENSE*
 .gitignore
+.install*
 
-opencode/node_modules
-opencode/package.json
-opencode/bun.lock
+# OS Specific directives
+{{- if ne .chezmoi.os "windows" }}
+.chezmoiscripts/*windows* # Ignore any script with Windows as its name
+.chezmoiscripts/*.ps1 # Additionally, ignore PowerShell scripts too
+{{- end }}
 
-{{ if ne .chezmoi.os "windows" }}
-.chezmoiscripts/symlink-neovim-config-windows.ps1 # Stops the symlink from being generated on other OSes
-{{ end }}
+{{- if ne .chezmoi.os "linux" }}
+.chezmoiscripts/*linux* # Ignore any script with Linux as its name
+.chezmoiscripts/*.sh # Additionally, ignore Bash scripts too
+{{- end }}
+
+# vim: ft=gitignore :

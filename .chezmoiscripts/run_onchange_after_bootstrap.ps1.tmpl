@@ -1,0 +1,27 @@
+{{- if eq .chezmoi.os "windows" -}}
+# vim: ft=ps1 :
+# self: {{ .chezmoi.sourceFile | sha256sum }}
+# projects.yaml hash: {{ include (joinPath .chezmoi.sourceDir ".chezmoidata/projects.yaml") | sha256sum }}
+{{- range .bootstrap_watchlist }}
+# {{ . }} hash: {{ include . | sha256sum }}
+{{- end }}
+
+# List of projects to bootstrap
+$projects = @(
+    {{- $projects := list -}}
+    {{- range .bootstrap_projects -}}
+        {{- $projects = append $projects (printf "\"%s\"" .) -}}
+    {{- end -}}
+    {{- join ", " $projects -}}
+)
+
+foreach ($dir in $projects) {
+    $path = Join-Path $HOME "$dir/bootstrap.ps1"
+    if (Test-Path $path) {
+        Write-Host "Bootstrapping $dir..."
+        & $path
+    } else {
+        Write-Warning "Bootstrap script not found for $dir"
+    }
+}
+{{ end -}}

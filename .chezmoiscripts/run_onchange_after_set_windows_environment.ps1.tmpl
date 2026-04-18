@@ -1,0 +1,20 @@
+{{ if eq .chezmoi.os "windows" -}}
+# vim: ft=ps1 :
+# Set XDG variables on Windows
+
+$envVars = @{
+    "XDG_CONFIG_HOME" = "$HOME\.config"
+    "XDG_DATA_HOME"   = "$HOME\.local\share"
+    "XDG_STATE_HOME"  = "$HOME\.local\state"
+    "XDG_CACHE_HOME"  = "$HOME\.cache"
+}
+
+foreach ($name in $envVars.Keys) {
+    $value = $envVars[$name]
+
+    [Environment]::SetEnvironmentVariable($name, $value, "Process")
+    [Environment]::SetEnvironmentVariable($name, $value, "User")
+
+    Write-Host "Set $name to $value"
+}
+{{ end -}}

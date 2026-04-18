@@ -8,6 +8,19 @@ alias zi='cdi'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias py='python'
+alias cat='bat'
+alias c='clear'
+
+{{- if eq .chezmoi.os "linux" }}
+{{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft" ) }}
+# Configure WSL alias so most files can be opened from Windows instead
+alias open='/mnt/c/Windows/explorer.exe'
+
+# Allows the shell to access the Windows Clipboard
+alias pbcopy='/mnt/c/Windows/System32/clip.exe'
+alias pbpaste='/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command "Get-Clipboard"'
+{{   end }}
+{{ end }}
 
 # Yazi: cd to last used directory
 y() {

@@ -1,0 +1,5 @@
+bootstrap_projects:
+  - ".config/yazi"
+
+bootstrap_watchlist:
+  - "dot_config/yazi/package.toml"

@@ -1,19 +1,25 @@
+{{- if ne .chezmoi.os "windows" -}}
 #!/usr/bin/env bash
 # vim: ft=bash :
+# self: {{ .chezmoi.sourceFile | sha256sum }}
+# projects.yaml hash: {{ include (joinPath .chezmoi.sourceDir ".chezmoidata/projects.yaml") | sha256sum }}
+{{- range .bootstrap_watchlist }}
+# {{ . }} hash: {{ include . | sha256sum }}
+{{- end}}
 
-# Yazi dependencies hash computation
-# {{ include "dot_config/yazi/package.toml" | sha256sum }}
+# List of projects to bootstrap
+DIRS=(
+    {{- range .bootstrap_projects }}
+    "{{ . }}"
+    {{- end }}
+)
 
-FILE='bootstrap'
-
-DIRS=(".config/yazi" ".config/.opencode")
-
-for dir in ${DIRS[@]}; do
-	file="$HOME/$dir/$FILE"
-	if [ -f "$file" ]; then
-		source "$file"
-	else
-		echo "WARNING: bootstrapping script not found for project $dir."
-		echo "Consider removing the folder from the database or creating a 'bootstrap' shell script."
-	fi
+for dir in "${DIRS[@]}"; do
+    file="$HOME/$dir/bootstrap"
+    if [ -f "$file" ]; then
+        source "$file"
+    else
+        echo "WARNING: bootstrap script not found for $dir"
+    fi
 done
+{{ end -}}
