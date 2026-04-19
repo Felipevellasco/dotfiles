@@ -34,7 +34,7 @@ edit = [
   { run = "${EDITOR:-vi} %s", desc = "$EDITOR", for = "unix", block = true },
 {{- if eq .chezmoi.os "linux" }}
 {{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-  { run = 'explorer.exe "$(wslpath -w "$@")"', desc = "Edit in Windows", for = "linux" },
+  { run = 'explorer.exe "$(wslpath -w "$@")" & disown', desc = "Edit in Windows", for = "linux" },
 {{   end }}
 {{ end }}
   { run = 'nvim "$@"', desc = "Neovim", for = "windows", block = true },
@@ -44,7 +44,7 @@ edit = [
 play = [
 {{- if eq .chezmoi.os "linux" }}
 {{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-  { run = 'explorer.exe "$(wslpath -w "$@")"', desc = "Play in Windows", for = "linux" },
+  { run = 'explorer.exe "$(wslpath -w "$@")" & disown', desc = "Play in Windows", for = "linux" },
 {{   end }}
 {{ end }}
   { run = "xdg-open %s1", desc = "Play", for = "linux", orphan = true },
@@ -58,7 +58,7 @@ play = [
 open = [
 {{- if eq .chezmoi.os "linux" }}
 {{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-  { run = 'explorer.exe "$(wslpath -w "$@")"', desc = "Open in Windows", for = "linux" },
+  { run = 'explorer.exe "$(wslpath -w "$@")" & disown', desc = "Open in Windows", for = "linux" },
 {{   end }}
 {{ end }}
   { run = "xdg-open %s1", desc = "Open", for = "linux" },
@@ -70,7 +70,7 @@ open = [
 reveal = [
 {{- if eq .chezmoi.os "linux" }}
 {{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-  { run = 'explorer.exe /select,"$(wslpath -w "$@")"', desc = "Reveal in Windows", for = "linux" },
+  { run = 'explorer.exe /select,"$(wslpath -w "$@")" & disown', desc = "Reveal in Windows", for = "linux" },
 {{   end }}
 {{ end }}
   { run = "xdg-open %d1", desc = "Reveal", for = "linux" },

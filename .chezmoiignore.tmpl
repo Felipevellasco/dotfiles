@@ -1,17 +1,19 @@
 README*
 LICENSE*
 .gitignore
-.install*
+.bootstrap/install*
 
 # OS Specific directives
 {{- if ne .chezmoi.os "windows" }}
-.chezmoiscripts/*windows* # Ignore any script with Windows as its name
-.chezmoiscripts/*.ps1 # Additionally, ignore PowerShell scripts too
+**/*windows* # Ignore any script with Windows as its name
+**/*.ps1 # Additionally, ignore PowerShell scripts too
+**/bootstrap.ps1 # Ignore the bootstrapping scripts for Windows
 {{- end }}
 
 {{- if ne .chezmoi.os "linux" }}
-.chezmoiscripts/*linux* # Ignore any script with Linux as its name
-.chezmoiscripts/*.sh # Additionally, ignore Bash scripts too
+**/*linux* # Ignore any script with Linux as its name
+**/*.sh # Additionally, ignore Bash scripts too
+**/bootstrap.sh # Ignore the bootstrapping scripts for Unix
 {{- end }}
 
 # vim: ft=gitignore :

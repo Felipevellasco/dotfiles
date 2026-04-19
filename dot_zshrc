@@ -4,8 +4,8 @@
 # Start profiling
 __profile_start=$(date +%s%3N)
 
-if [ -f "$HOME/.shell_environment" ]; then
-    source "$HOME/.shell_environment"
+if [ -f "$HOME/shell/environment" ]; then
+    source "$HOME/shell/environment"
 fi
 
 # Load Starship (Immediate load for prompt visibility)
@@ -71,8 +71,8 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # --- Functions and aliases ---
 
-if [ -f "$HOME/.shell_common" ]; then
-    source "$HOME/.shell_common"
+if [ -f "$HOME/shell/common" ]; then
+    source "$HOME/shell/common"
 fi
 
 # End profiling

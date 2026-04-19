@@ -1,0 +1,26 @@
+{{- if ne .chezmoi.os "windows" -}}
+#!/usr/bin/env bash
+# vim: ft=bash :
+
+# Playbooks hash: {{ output "sh" "-c" (printf "find %s/dot_bootstrap/vars -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum" .chezmoi.sourceDir) | trim -}}
+# hasGUI: {{ .hasGUI }}
+# The previous commands will cause the Ansible playbooks to be replayed should the package lists change.
+
+if ! command -v ansible >/dev/null; then
+    echo "Installing Ansible..."
+    {{ if eq .chezmoi.osRelease.id "arch" -}}
+    # Arch Linux setup 
+    sudo pacman -S --noconfirm ansible
+    {{ else if eq .chezmoi.osRelease.id "ubuntu" -}}
+    # Ubuntu setup
+    sudo apt-get update
+    sudo apt-get install -y software-properties-common
+    sudo add-apt-repository --yes --update ppa:ansible/ansible
+    sudo apt-get install -y ansible
+    {{- end }}
+else
+    echo "Ansible is already installed."
+fi
+
+exec ansible-playbook "$HOME/.bootstrap/ansible_linux.yaml" --ask-become-pass
+{{- end }}

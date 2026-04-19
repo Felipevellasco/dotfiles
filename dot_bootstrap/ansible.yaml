@@ -1,0 +1,8 @@
+---
+# vim: ft=yaml :
+
+- import_playbook: ansible_common.yaml
+
+# Import the correct playbook for the running OS
+- import_playbook: '{{ "linux" ansible_facts["os_family"] != "Windows" else "windows" }}_setup.yaml'
+...

@@ -1,0 +1,8 @@
+# vim: ft=yaml :
+
+data:
+{{- if eq .chezmoi.os "windows" -}}
+    hasGUI: true
+{{- else }}
+    hasGUI: {{ promptBoolOnce . "hasGUI" "Does this machine have a GUI interface?" false }}
+{{- end }}

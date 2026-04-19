@@ -10,16 +10,16 @@ __omp_theme="amro-custom"
 __original_prompt_command="$PROMPT_COMMAND"
 
 # Load.shell_environment variables
-if [ -f "$HOME/.shell_environment" ]; then
-    source "$HOME/.shell_environment"
+if [ -f "$HOME/shell/environment" ]; then
+    source "$HOME/shell/environment"
 fi
 
 # Loads OhMyPosh
 eval "$(oh-my-posh init bash --config "$POSH_THEMES_PATH/$__omp_theme.omp.json")"
 
 # Load common aliases and shell functions
-if [ -f "$HOME/.shell_common" ]; then
-    source "$HOME/.shell_common"
+if [ -f "$HOME/shell/common" ]; then
+    source "$HOME/shell/common"
 fi
 
 # Enables command autocompletion

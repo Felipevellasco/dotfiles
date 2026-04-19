@@ -1,0 +1,35 @@
+---
+# vim: ft=yaml :
+
+- name: Download and install packages
+  hosts: localhost
+  become: true
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - name: Preload variables
+      ansible.builtin.set_fact:
+        os_family: '{{ "linux" if ansible_facts["os_family"] != "Windows" else "windows" }}'
+        os_distro: '{{ ansible_facts["distribution"] | lower | default() }}'
+
+    - name: Load .yaml configuration
+      ansible.builtin.include_vars:
+        file: "vars/chezmoi.yaml"
+        file: 'vars/{{ os_family }}.yaml'
+
+    - name: Install packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages.shared.common + (packages.shared[os_distro] | default([])) }}"
+      become: yes
+
+    - name: Install GUI packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages.gui.common + (packages.gui[os_distro] | default([])) }}"
+      when: gui | default(false)
+      become: yes
+...

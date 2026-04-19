@@ -1,0 +1,19 @@
+---
+# vim: ft=yaml :
+
+- name: Execute Linux specific configuration
+  hosts: localhost
+  become: true
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - name: Get username
+      ansible.builtin.set_fact:
+        remote_regular_user: '{{ ansible_facts["env"]["SUDO_USER"] | default(ansible_facts["user_id"]) }}'
+
+    - name: Set default shell to zsh
+      ansible.builtin.user:
+        name: "{{ remote_regular_user }}"
+        shell: /usr/bin/zsh
+...

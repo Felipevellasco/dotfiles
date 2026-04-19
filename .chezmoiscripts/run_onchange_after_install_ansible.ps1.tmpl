@@ -1,0 +1,15 @@
+{{- if eq .chezmoi.os "windows" -}}
+# vim: ft=ps1 :
+
+# Playbooks hash: {{ output "sh" "-c" (printf "find %s/dot_bootstrap/vars -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum" .chezmoi.sourceDir) | trim -}}
+# hasGUI: {{ .hasGUI }}
+# The previous commands will cause the Ansible playbooks to be replayed should the package lists change.
+
+if (-not (Get-Command ansible -ErrorAction SilentlyContinue)) {
+    Write-Host "Ansible was not found." -ForegroundColor Cyan
+    Write-Host "Installing via pip..." -ForegroundColor Cyan
+    # Ensure Python/Pip is available first
+    python -m pip install --user ansible
+
+& ansible-playbook "$env:USERPROFILE\.bootstrap\ansible_windows.yaml" --ask-become-pass
+{{- end }}

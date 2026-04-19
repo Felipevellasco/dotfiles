@@ -1,0 +1,29 @@
+---
+# vim: ft=yaml :
+
+packages:
+  shared:
+    common:
+      - Git.Git
+      - Python.Python.3.12
+      - chezmoi.chezmoi
+      - Neovim.Neovim
+      - ffmpeg.ffmpeg
+      - 7zip.7zip
+      - jqlang.jq
+      - sharkdp.fd
+      - BurntSushi.ripgrep
+      - junegunn.fzf
+      - ajeetdsouza.zoxide
+      - ImageMagick.ImageMagick
+      - LLVM.LLVM
+      - OpenJS.NodeJS
+
+  gui:
+    common:
+      - Mozilla.Firefox
+      - Vivaldi.Vivaldi
+      - GitHub.cli
+      - JetBrains.Mono.NerdFont
+
+...

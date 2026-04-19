@@ -1,0 +1,29 @@
+---
+# vim: ft=yaml :
+
+- name: Execute Windows specific configuration
+  hosts: localhost
+  become: true
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - name: Get user name
+      ansible.builtin.set_fact:
+        remote_regular_user: '{{ ansible_facts["env"]["SUDO_USER"] | default(ansible_facts["user_id"]) }}'
+
+    - name: Check for JetBrains Mono
+      ansible.builtin.shell: "ls ~{{ remote_regular_user }}/.fonts/JetBrainsMonoNerd*FontMono*"
+      register: jetbrains_mono_exists
+      ignore_errors: true
+      changed_when: false
+
+    - name: Download JetBrains Mono
+      when: jetbrains_mono_exists is failed
+      ansible.builtin.unarchive:
+        src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip
+        dest: "~{{ remote_regular_user }}/.fonts/"
+        remote_src: true
+        mode: "0755"
+        owner: "{{ remote_regular_user }}"
+...

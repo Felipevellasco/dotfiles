@@ -1,0 +1,39 @@
+---
+# vim: ft=yaml :
+
+packages: 
+  shared:
+    common:
+      - git
+      - python
+      - chezmoi
+      - neovim
+      - tmux
+      - zsh
+      - yazi
+      - ffmpeg
+      - 7zip
+      - jq
+      - poppler
+      - fd
+      - ripgrep
+      - fzf
+      - zoxide
+      - resvg
+      - imagemagick
+      - gcc
+      - clang
+      - llvm
+      - openssh
+    ubuntu: []
+    archlinux: []
+
+  gui:
+    common:
+      - firefox
+      - vivaldi
+      - ttf-jetbrains-mono-nerd
+    ubuntu: []
+    archlinux: []
+
+...
