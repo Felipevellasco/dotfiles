@@ -9,9 +9,8 @@ local function colorscript()
 end
 
 return {
-  {
     'folke/snacks.nvim',
-    priority = 999,
+    priority = 1000,
     lazy = false,
 
     opts = {
@@ -110,10 +109,11 @@ return {
         enabled = true,
         replace_netrw = true,
         trash = true,
-        -- layout = {
-        --   preset = 'sidebar',
-        --   preview = 'false',
-        -- },
+        auto_close = true, -- Does not work at all??
+        layout = {
+          preset = 'sidebar',
+          preview = 'false',
+        },
       },
 
       indent = { enabled = true },
@@ -122,7 +122,7 @@ return {
 
       image = { enabled = true },
 
-      -- picker = { enabled = true },
+      picker = { enabled = true },
 
       notifier = { enabled = true, timeout = 5000 },
 
@@ -178,7 +178,7 @@ return {
         function()
           Snacks.picker.git_branches()
         end,
-        desc = 'Git Branches',
+        desc = '[G]it [B]ranches',
       },
 
       {
@@ -186,23 +186,23 @@ return {
         function()
           Snacks.lazygit.log { preview = false }
         end,
-        desc = 'Git Log',
+        desc = '[G]it [L]og',
       },
 
-      -- {
-      --   '<leader>gL',
-      --   function()
-      --     Snacks.picker.git_log_line()
-      --   end,
-      --   desc = 'Git Log Line',
-      -- },
+       {
+         '<leader>gL',
+         function()
+           Snacks.picker.git_log_line()
+         end,
+         desc = '[G]it [L]og (line)',
+       },
 
       {
         '<leader>gs',
         function()
           Snacks.picker.git_status()
         end,
-        desc = 'Git Status',
+        desc = '[G]it [S]tatus',
       },
 
       -- {
@@ -218,16 +218,15 @@ return {
         function()
           Snacks.picker.git_diff()
         end,
-        desc = 'Git Diff (Hunks)',
+        desc = '[G]it [D]iff (Hunks)',
       },
 
-      -- {
-      --   '<leader>gf',
-      --   function()
-      --     Snacks.picker.git_log_file()
-      --   end,
-      --   desc = 'Git Log File',
-      -- },
+      {
+         '<leader>gf',
+         function()
+           Snacks.picker.git_log_file()
+         end,
+         desc = '[G]it Log [F]ile',
+       },
     },
-  },
 }
