@@ -1,0 +1,60 @@
+# chezmoi:template:left-delimiter=[[ right-delimiter=]]
+# vim: ft=yaml :
+
+- name: Check if Homebrew is installed
+  ansible.builtin.stat:
+    path: "/home/linuxbrew/.linuxbrew/bin/brew"
+  register: brew_stat
+
+- block:
+    - name: Create Homebrew directory
+      ansible.builtin.file:
+        path: "/home/linuxbrew/.linuxbrew"
+        state: directory
+        owner: "{{ remote_regular_user }}"
+        group: "{{ remote_regular_user }}"
+        mode: '0755'
+      become: true
+
+    - name: Install Homebrew
+      ansible.builtin.shell: |
+        curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /home/linuxbrew/.linuxbrew
+      # Run as the user to prevent root-owned files during extraction
+      become: yes
+      become_user: "{{ remote_regular_user }}"
+
+    - name: Fix Homebrew permissions recursively
+      ansible.builtin.file:
+        path: "/home/linuxbrew/.linuxbrew"
+        state: directory
+        owner: "{{ remote_regular_user }}"
+        group: "{{ remote_regular_user }}"
+        recurse: yes
+      become: true
+
+  when: not brew_stat.stat.exists
+  environment:
+    PATH: '/home/linuxbrew/.linuxbrew/bin:{{ ansible_facts["env"]["PATH"] }}'
+
+- name: Install Homebrew packages
+  community.general.homebrew:
+    name: "{{ packages.shared.homebrew }}"
+    state: present
+  become: yes
+  become_user: "{{ remote_regular_user }}"
+  environment:
+    PATH: '/home/linuxbrew/.linuxbrew/bin:{{ ansible_facts["env"]["PATH"] }}'
+
+# [[- if .hasGUI ]]
+- name: Install Homebrew GUI packages
+  community.general.homebrew:
+    name: "{{ packages.gui.homebrew }}"
+    state: present
+  when: gui | default(false)
+  become: no
+# [[- end ]]
+
+- name: Set default shell to zsh
+  ansible.builtin.user:
+    name: "{{ remote_regular_user }}"
+    shell: /usr/bin/zsh

@@ -9,7 +9,7 @@ __omp_theme="amro-custom"
 # Preserve original PROMPT_COMMAND
 __original_prompt_command="$PROMPT_COMMAND"
 
-# Load.shell_environment variables
+# Load shell environment variables
 if [ -f "$HOME/shell/environment" ]; then
     source "$HOME/shell/environment"
 fi
@@ -35,10 +35,18 @@ alias colorscript="bash ~/.colorscripts/colorscript.sh"
 export DIR_COLORSCRIPTS="$HOME/.colorscripts/colorscripts"
 export PATH="$HOME/.local/bin:$PATH"
 
+# --- Activation ---
+
+# opencode
+export PATH=/c/Users/Felipe/.opencode/bin:$PATH
+
+# Homebrew Setup
+if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
 # End profiling
 __profile_end=$(date +%s%3N)
 __profile_elapsed=$((__profile_end - __profile_start))
 echo "Profile loaded in ${__profile_elapsed} ms."
 
-# opencode
-export PATH=/c/Users/Felipe/.opencode/bin:$PATH

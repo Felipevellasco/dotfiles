@@ -75,6 +75,13 @@ if [ -f "$HOME/shell/common" ]; then
     source "$HOME/shell/common"
 fi
 
+# --- Activation ---
+
+# Homebrew Setup
+if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
 # End profiling
 __profile_end=$(date +%s%3N)
 __profile_elapsed=$((__profile_end - __profile_start))

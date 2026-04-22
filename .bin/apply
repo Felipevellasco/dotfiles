@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# vim: ft=bash :
+
+# If chezmoi apply fails for some reason, display a tmux popup window for user intervention.
+if ! chezmoi apply --passphrase=false 2>/dev/null; then
+	tmux display-popup -E -h 70% -w 70% "chezmoi apply"
+fi

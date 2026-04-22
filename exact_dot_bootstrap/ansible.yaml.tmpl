@@ -1,0 +1,54 @@
+# chezmoi:template:left-delimiter=[[ right-delimiter=]]
+---
+# vim: ft=yaml :
+
+- name: Personal dotfiles setup
+  hosts: localhost
+  become: true
+  connection: local
+  gather_facts: yes
+
+  tasks:
+    - name: Preload variables
+      ansible.builtin.set_fact:
+        os_family: '{{ "linux" if ansible_facts["os_family"] != "Windows" else "windows" }}'
+        os_distro: '{{ ansible_facts["distribution"] | lower | default() }}'
+        remote_regular_user: '{{ ansible_facts["env"]["SUDO_USER"] | default(ansible_facts["user_id"]) }}'
+
+    - name: Load .yaml configuration
+      ansible.builtin.include_vars:
+        ignore_unknown_extensions: true
+        dir: vars
+
+    - name: Check for OS-specific task files
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: os_tasks
+      loop:
+        - "sys/pre-[[ .osid ]].yaml"
+        - "sys/post-[[ .osid ]].yaml"
+
+    - name: Pre-configure operating system
+      include_tasks: sys/pre-[[ .osid ]].yaml
+      when: os_tasks.results[0].stat.exists
+
+    - name: Common configuration
+      include_tasks: ansible_common.yaml
+
+    # [[- if .windows ]]
+    - name: Windows specific setup
+      include_tasks: ansible_windows.yaml
+      when: os_family == "windows"
+    # [[- end ]]
+
+    # [[- if .linux ]]
+    - name: Linux specific setup
+      include_tasks: ansible_linux.yaml
+      when: os_family == "linux"
+    # [[- end ]]
+
+    - name: Finish OS setup
+      include_tasks: sys/post-[[ .osid ]].yaml
+      when: os_tasks.results[1].stat.exists
+
+...

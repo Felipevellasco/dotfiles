@@ -3,14 +3,19 @@ LICENSE*
 .gitignore
 .bootstrap/install*
 
+# Ignore all pre/post config for all OSes
+.bootstrap/sys/*
+# Allow pre/post config for current working OS
+!.bootstrap/sys/*{{ .osid }}.yaml
+
 # OS Specific directives
-{{- if ne .chezmoi.os "windows" }}
+{{- if not .windows }}
 **/*windows* # Ignore any script with Windows as its name
 **/*.ps1 # Additionally, ignore PowerShell scripts too
 **/bootstrap.ps1 # Ignore the bootstrapping scripts for Windows
 {{- end }}
 
-{{- if ne .chezmoi.os "linux" }}
+{{- if not .linux }}
 **/*linux* # Ignore any script with Linux as its name
 **/*.sh # Additionally, ignore Bash scripts too
 **/bootstrap.sh # Ignore the bootstrapping scripts for Unix

@@ -2,25 +2,35 @@
 #!/usr/bin/env bash
 # vim: ft=bash :
 
-# Playbooks hash: {{ output "sh" "-c" (printf "find %s/dot_bootstrap/vars -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum" .chezmoi.sourceDir) | trim -}}
-# hasGUI: {{ .hasGUI }}
+# Playbooks hash: {{ output "sh" "-c" (printf "find %s/exact_dot_bootstrap/vars -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum" .chezmoi.sourceDir) | trim -}}
+# gui: {{ .hasGUI }}
+# wsl: {{ .wsl }}
+# ssh: {{ .ssh }}
 # The previous commands will cause the Ansible playbooks to be replayed should the package lists change.
+
+exec > /dev/tty 
 
 if ! command -v ansible >/dev/null; then
     echo "Installing Ansible..."
-    {{ if eq .chezmoi.osRelease.id "arch" -}}
+    {{ if eq .distro "arch" -}}
     # Arch Linux setup 
     sudo pacman -S --noconfirm ansible
-    {{ else if eq .chezmoi.osRelease.id "ubuntu" -}}
+    {{ else if eq .distro "ubuntu" -}}
     # Ubuntu setup
     sudo apt-get update
     sudo apt-get install -y software-properties-common
     sudo add-apt-repository --yes --update ppa:ansible/ansible
     sudo apt-get install -y ansible
     {{- end }}
+
 else
     echo "Ansible is already installed."
 fi
 
-exec ansible-playbook "$HOME/.bootstrap/ansible_linux.yaml" --ask-become-pass
+if ! ansible-galaxy collection list | grep -q community; then
+    echo "Installing community.general package for Ansible."
+    ansible-galaxy collection install community.general
+fi
+
+exec ansible-playbook "{{ .chezmoi.destDir }}/.bootstrap/ansible.yaml" --ask-become-pass
 {{- end }}

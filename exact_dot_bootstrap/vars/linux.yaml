@@ -25,8 +25,18 @@ packages:
       - clang
       - llvm
       - openssh
-    ubuntu: []
-    archlinux: []
+      - unzip
+      - tar
+      - cargo
+    ubuntu:
+      - build-essential
+      - ruby-full
+    archlinux:
+      - base-devel
+      - ruby
+    homebrew:
+      - watchman
+      - platformio
 
   gui:
     common:
@@ -35,5 +45,6 @@ packages:
       - ttf-jetbrains-mono-nerd
     ubuntu: []
     archlinux: []
+    homebrew: []
 
 ...
