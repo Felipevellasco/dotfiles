@@ -18,10 +18,10 @@ All these packages can be installed using the package manager of your operating 
 
 On Linux:
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/Felipevellasco/.dotfiles/main/dot_bootstrap/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/Felipevellasco/dotfiles/main/exact_dot_bootstrap/install.sh)"
 ```
 
 On Windows:
 ```bash
-powershell -c "irm https://raw.githubusercontent.com/Felipevellasco/.dotfiles/main/dot_bootstrap/install.ps1 | iex"
+powershell -c "irm https://raw.githubusercontent.com/Felipevellasco/dotfiles/main/exact_dot_bootstrap/install.ps1 | iex"
 ```
