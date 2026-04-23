@@ -28,6 +28,7 @@ packages:
       - unzip
       - tar
       - cargo
+      - mediainfo
     ubuntu:
       - build-essential
       - ruby-full
@@ -35,6 +36,7 @@ packages:
       - base-devel
       - ruby
     homebrew:
+      - node
       - watchman
       - platformio
 
