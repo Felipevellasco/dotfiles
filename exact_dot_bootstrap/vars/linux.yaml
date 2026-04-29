@@ -5,8 +5,6 @@ packages:
   shared:
     common:
       - git
-      - python
-      - chezmoi
       - neovim
       - tmux
       - zsh
@@ -14,39 +12,48 @@ packages:
       - ffmpeg
       - 7zip
       - jq
-      - poppler
-      - fd
       - ripgrep
       - fzf
       - zoxide
-      - resvg
       - imagemagick
       - gcc
       - clang
       - llvm
-      - openssh
       - unzip
       - tar
       - cargo
       - mediainfo
-    ubuntu:
+    apt:
       - build-essential
       - ruby-full
-    archlinux:
+      - python-is-python3
+      - poppler-utils
+      - fd-find
+      - openssh-server
+    pacman:
       - base-devel
       - ruby
+      - python
+      - poppler
+      - fd
+      - openssh
+      - resvg
+      - starship
     homebrew:
       - node
       - watchman
       - platformio
+      - chezmoi
 
   gui:
     common:
       - firefox
       - vivaldi
+    apt: []
+      # - ghostty # should be installed through homebrew or curl.
+    pacman:
       - ttf-jetbrains-mono-nerd
-    ubuntu: []
-    archlinux: []
-    homebrew: []
+    homebrew:
+      - ghostty
 
 ...

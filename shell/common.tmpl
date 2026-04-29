@@ -12,6 +12,8 @@ alias cat='bat'
 alias c='clear'
 alias Q='exit'
 
+alias dotfiles-install='ansible-playbook $HOME/.bootstrap/ansible.yaml --ask-become-pass'
+
 # {{- if .wsl }}
 # Configure WSL alias so most files can be opened from Windows instead
 alias open='/mnt/c/Windows/explorer.exe'

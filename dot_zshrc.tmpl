@@ -4,9 +4,7 @@
 # Start profiling
 __profile_start=$(date +%s%3N)
 
-if [ -f "$HOME/shell/environment" ]; then
-    source "$HOME/shell/environment"
-fi
+source "$HOME/shell/environment"
 
 # Load Starship (Immediate load for prompt visibility)
 eval "$(starship init zsh)"
@@ -19,11 +17,13 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
-# --- Plugins (Turbo Mode: wait'0') ---
+# --- Plugins ---
 
-# Plugin made the shell sluggish
-# zinit ice wait'0' lucid
-# zinit light zsh-users/zsh-syntax-highlighting
+# {{- if not .wsl }}
+# Plugin made the shell sluggish on WSL
+zinit ice wait'0' lucid
+zinit light zsh-users/zsh-syntax-highlighting
+# {{ end -}}
 
 zinit ice wait'0' lucid
 zinit light zsh-users/zsh-completions
@@ -31,9 +31,9 @@ zinit light zsh-users/zsh-completions
 zinit ice wait'0' lucid
 zinit light zsh-users/zsh-autosuggestions
 
-# Standard Shell Integrations (Using local binaries for speed)
-eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+# Standard Shell Integrations
+source <(fzf --zsh)
+eval "$(zoxide init zsh)"
 
 # Snippets from Oh-My-Zsh
 zinit ice wait'0' lucid
@@ -59,8 +59,8 @@ setopt appendhistory sharehistory hist_ignore_space hist_ignore_all_dups hist_sa
 
 # Keybindings
 bindkey -e
-bindkey '^n' history-search-forward
-bindkey '^p' history-search-backward
+bindkey '^j' history-search-forward
+bindkey '^k' history-search-backward
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -71,9 +71,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # --- Functions and aliases ---
 
-if [ -f "$HOME/shell/common" ]; then
-    source "$HOME/shell/common"
-fi
+source "$HOME/shell/common"
 
 # --- Activation ---
 

@@ -16,7 +16,7 @@ $projects = @(
 )
 
 foreach ($dir in $projects) {
-    $path = Join-Path $HOME "$dir/bootstrap.ps1"
+    $path = Join-Path "{{ .chezmoi.destDir }}" "$dir/{{ .bootstrapper }}.ps1"
     if (Test-Path $path) {
         Write-Host "Bootstrapping $dir..."
         & $path

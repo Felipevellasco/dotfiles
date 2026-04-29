@@ -4,14 +4,14 @@
 
 - name: Install standard packages
   package:
-    name: "{{ packages.shared.common + (packages.shared[os_distro] | default([])) }}"
+    name: "{{ packages.shared.common + (packages.shared[pacman] | default([])) }}"
     state: present
   become: yes
 
 # [[- if .hasGUI ]]
 - name: Install GUI packages
   package:
-    name: "{{ packages.gui.common + (packages.gui[os_distro] | default([])) }}"
+    name: "{{ packages.gui.common + (packages.gui[pacman] | default([])) }}"
     state: present
   when: gui | default(false)
   become: yes

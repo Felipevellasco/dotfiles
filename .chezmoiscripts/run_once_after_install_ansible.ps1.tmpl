@@ -1,15 +1,10 @@
 {{- if eq .chezmoi.os "windows" -}}
 # vim: ft=ps1 :
 
-# Playbooks hash: {{ output "sh" "-c" (printf "find %s/exact_dot_bootstrap/vars -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum" .chezmoi.sourceDir) | trim -}}
-# gui: {{ .hasGUI }}
-# wsl: {{ .wsl }}
-# ssh: {{ .ssh }}
-# The previous commands will cause the Ansible playbooks to be replayed should the package lists change.
-
 if (-not (Get-Command ansible -ErrorAction SilentlyContinue)) {
     Write-Host "Ansible was not found." -ForegroundColor Cyan
     Write-Host "Installing via pip..." -ForegroundColor Cyan
+
     # Ensure Python/Pip is available first
     python -m pip install --user ansible
     ansible-galaxy collection install community.general
@@ -20,4 +15,6 @@ if (-not (ansible-galaxy collection list | Select-String "community" -Quiet)) {
 }
 
 & ansible-playbook "{{ .chezmoi.destDir }}/.bootstrap/ansible.yaml" --ask-become-pass | Out-Host
+
+Write-Host "If you ever want to re-run the Ansible playbook, execute 'dotfiles-install' on your shell."
 {{- end }}

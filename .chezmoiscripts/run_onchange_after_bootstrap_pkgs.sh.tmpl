@@ -15,11 +15,12 @@ DIRS=(
 )
 
 for dir in "${DIRS[@]}"; do
-    file="$HOME/$dir/bootstrap"
+    file="{{ .chezmoi.destDir }}/$dir/{{ .bootstrapper }}.sh"
     if [ -f "$file" ]; then
         source "$file"
     else
-        echo "WARNING: bootstrap script not found for $dir"
+        echo "[BOOTSTRAP] WARNING: bootstrap script not found:"
+        echo "$file"
     fi
 done
 {{ end -}}

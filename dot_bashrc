@@ -1,44 +1,34 @@
+#!/usr/bin/env bash
 # vim: set filetype=bash :
 
 # Start profiling
 __profile_start=$(date +%s%3N)
 
-# Oh My Posh theme
-__omp_theme="amro-custom"
+# --- Common environment --- #
+source "$HOME/shell/common"
 
-# Preserve original PROMPT_COMMAND
-__original_prompt_command="$PROMPT_COMMAND"
+# --- Starship --- #
+eval "$(starship init bash)"
 
-# Load shell environment variables
-if [ -f "$HOME/shell/environment" ]; then
-    source "$HOME/shell/environment"
-fi
-
-# Loads OhMyPosh
-eval "$(oh-my-posh init bash --config "$POSH_THEMES_PATH/$__omp_theme.omp.json")"
-
-# Load common aliases and shell functions
-if [ -f "$HOME/shell/common" ]; then
-    source "$HOME/shell/common"
-fi
+# --- Activation --- #
 
 # Enables command autocompletion
-if [ -f /etc/bash_completion ]; then
-	. /etc/bash_completion
-fi
+[ -f /etc/bash_completion ] && . /etc/bash_completion
+[ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
-# Zoxide init
-eval "$(zoxide init --cmd cd bash)"
+# Load shell environment variables
+source "$HOME/shell/environment"
+
+eval "$(zoxide init bash)"
+eval "$(fzf --bash)"
 
 # Calls for colorscript
-alias colorscript="bash ~/.colorscripts/colorscript.sh"
-export DIR_COLORSCRIPTS="$HOME/.colorscripts/colorscripts"
-export PATH="$HOME/.local/bin:$PATH"
-
-# --- Activation ---
+# alias colorscript="bash ~/.colorscripts/colorscript.sh"
+# export DIR_COLORSCRIPTS="$HOME/.colorscripts/colorscripts"
+# export PATH="$HOME/.local/bin:$PATH"
 
 # opencode
-export PATH=/c/Users/Felipe/.opencode/bin:$PATH
+# export PATH=/c/Users/Felipe/.opencode/bin:$PATH
 
 # Homebrew Setup
 if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
