@@ -70,7 +70,7 @@ return {
 			virtual_text = {
 				source = "if_many",
 				spacing = 2,
-				prefix = "●",
+				prefix = "󰣏",
 				format = function(diagnostic)
 					local diagnostic_message = {
 						[vim.diagnostic.severity.ERROR] = diagnostic.message,
@@ -87,7 +87,7 @@ return {
 		--  By default, Neovim doesn't support everything that is in the LSP specification.
 		--  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
 		--  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
-		local capabilities = require("blink.cmp").get_lsp_capabilities()
+		-- local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 		-- Ensure the servers and tools configured are installed
 		--
@@ -103,30 +103,17 @@ return {
 		-- You can add other tools here that you want Mason to install
 		-- for you, so that they are available from within Neovim.
 
-		local ensure_installed = felipe.lspServers or {}
-		vim.list_extend(ensure_installed, {
-			"stylua", -- Used to format Lua code
-		})
-		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+		require("mason-tool-installer").setup({ ensure_installed = felipe.lspServers })
 
-		require("mason-lspconfig").setup({
-			ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-			automatic_installation = false,
-			automatic_enable = {
-				exclude = { "ts_ls" },
-			},
-			handlers = {
-				function(server_name)
-					local server = {}
-					local has_override, override_config = pcall(require, "felipe.lsp.overrides." .. server_name)
-					if has_override then
-						server = override_config
-					end
+		for index, server in ipairs(felipe.lspServers) do
+			local hasOverride, override = pcall(require, "felipe.lsp.overrides." .. server)
 
-					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-					vim.lsp.config(server_name, server)
-				end,
-			},
-		})
+			if hasOverride then
+				vim.lsp.config(server, override)
+			else
+				vim.lsp.config(server, {})
+			end
+			vim.lsp.enable(server)
+		end
 	end,
 }

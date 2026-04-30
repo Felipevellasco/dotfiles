@@ -13,7 +13,9 @@
 {{-   $is_ssh = true -}}
 {{- end }}
 
-{{- $guiDetected := or (env "DISPLAY") (env "WAYLAND_DISPLAY") }}
+{{- $hasDisplay := ne (env "DISPLAY") "" -}}
+{{- $hasWayland := ne (env "WAYLAND_DISPLAY") "" -}}
+{{- $guiDetected := or $hasDisplay $hasWayland -}}
 {{- $isWSL := contains "microsoft" (.chezmoi.kernel.osrelease | lower) }}
 {{- $shouldBeGUI := and $guiDetected (not $isWSL) }}
 

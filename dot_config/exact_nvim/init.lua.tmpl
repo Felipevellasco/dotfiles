@@ -43,9 +43,9 @@ vim.o.number = true
 vim.o.relativenumber = true
 
 -- Configure tab behavior
-vim.o.tabstop = 4 -- Number of spaces a <Tab> counts for
-vim.o.shiftwidth = 4 -- Number of spaces for each code indentation level
--- vim.o.expandtab = true   -- Use spaces instead of tabs
+vim.o.tabstop = 2 -- Number of spaces a <Tab> counts for
+vim.o.shiftwidth = 2 -- Number of spaces for each code indentation level
+vim.o.expandtab = true -- Use spaces instead of tabs
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = "a"
@@ -134,6 +134,7 @@ rtp:prepend(lazypath)
 require("lazy").setup({
 	{ import = "felipe.plugins" },
 	{ import = "felipe.lsp" },
+	{ import = "felipe.theme" },
 
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	-- NOTE: Plugins can also be added by using a table,

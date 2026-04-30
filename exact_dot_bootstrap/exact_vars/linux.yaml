@@ -5,10 +5,8 @@ packages:
   shared:
     common:
       - git
-      - neovim
       - tmux
       - zsh
-      - yazi
       - ffmpeg
       - 7zip
       - jq
@@ -31,6 +29,8 @@ packages:
       - fd-find
       - openssh-server
     pacman:
+      - neovim
+      - yazi
       - base-devel
       - ruby
       - python
@@ -40,10 +40,16 @@ packages:
       - resvg
       - starship
     homebrew:
-      - node
-      - watchman
-      - platformio
-      - chezmoi
+      common:
+        - node
+        - watchman
+        - platformio
+        - chezmoi
+      apt:
+        - neovim
+        - yazi
+    curl: []
+
 
   gui:
     common:
@@ -54,6 +60,8 @@ packages:
     pacman:
       - ttf-jetbrains-mono-nerd
     homebrew:
-      - ghostty
+      common:
+        - ghostty
+      apt: []
 
 ...

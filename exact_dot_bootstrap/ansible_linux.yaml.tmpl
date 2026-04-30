@@ -38,12 +38,22 @@
 
 - name: Install Homebrew packages
   community.general.homebrew:
-    name: "{{ packages.shared.homebrew }}"
+    name: "{{ packages.shared.homebrew.common }}"
     state: present
-  become: yes
+  become: no
   become_user: "{{ remote_regular_user }}"
   environment:
     PATH: '/home/linuxbrew/.linuxbrew/bin:{{ ansible_facts["env"]["PATH"] }}'
+
+- name: Install missing/outdated apt packages
+  community.general.homebrew:
+    name: "{{ packages.shared.homebrew.apt }}"
+    state: present
+  become: no
+  become_user: "{{ remote_regular_user }}"
+  environment:
+    PATH: '/home/linuxbrew/.linuxbrew/bin:{{ ansible_facts["env"]["PATH"] }}'
+  when: pacman == "apt"
 
 # [[- if .hasGUI ]]
 - name: Install Homebrew GUI packages

@@ -33,9 +33,10 @@ M.obsidianVaults = {
 }
 
 M.lspServers = {
+	"lua_ls",
+	"stylua",
 	"clangd",
 	"pyright",
-	"lua_ls",
 	"buf_ls",
 	"texlab",
 	-- 'rust_analyzer',
@@ -59,4 +60,5 @@ M.treesitterEnsureInstalled = {
 	"latex",
 }
 
+M.disable_formatting = { c = true, cpp = true, tex = true }
 return M
