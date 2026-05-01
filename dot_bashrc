@@ -5,7 +5,7 @@
 __profile_start=$(date +%s%3N)
 
 # --- Common environment --- #
-source "$HOME/shell/common"
+source "$HOME/.config/shell/common"
 
 # --- Starship --- #
 eval "$(starship init bash)"
@@ -17,7 +17,7 @@ eval "$(starship init bash)"
 [ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
 # Load shell environment variables
-source "$HOME/shell/environment"
+source "$HOME/.config/shell/environment"
 
 eval "$(zoxide init bash)"
 eval "$(fzf --bash)"
@@ -30,13 +30,21 @@ eval "$(fzf --bash)"
 # opencode
 # export PATH=/c/Users/Felipe/.opencode/bin:$PATH
 
-# Homebrew Setup
-if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# --- Splash screen --- #
+
+splash="$HOME/.config/shell/splash"
+
+# Show splash if:
+# 1. SSH CASE: Run only on the first shell of an SSH connection
+if [ -n "$SSH_CONNECTION" ] && [ "$SHLVL" -eq 1 ]; then
+    bash "$splash"
+
+# 2. LOCAL CASE: Run only on the first shell of a local session, but NOT inside TMUX
+elif [ -z "$SSH_CONNECTION" ] && [ "$SHLVL" -eq 1 ] && [ -z "$TMUX" ]; then
+    bash "$splash"
 fi
 
 # End profiling
 __profile_end=$(date +%s%3N)
 __profile_elapsed=$((__profile_end - __profile_start))
 echo "Profile loaded in ${__profile_elapsed} ms."
-

@@ -11,8 +11,6 @@ packages:
       - 7zip
       - jq
       - ripgrep
-      - fzf
-      - zoxide
       - imagemagick
       - gcc
       - clang
@@ -21,6 +19,10 @@ packages:
       - tar
       - cargo
       - mediainfo
+      - lolcat
+      - ncal
+      - figlet
+      - toilet
     apt:
       - build-essential
       - ruby-full
@@ -39,15 +41,23 @@ packages:
       - openssh
       - resvg
       - starship
+      - fzf
+      - zoxide
+      - tree-sitter-cli
     homebrew:
       common:
         - node
         - watchman
         - platformio
         - chezmoi
+        - fastfetch
       apt:
+        - starship
         - neovim
         - yazi
+        - fzf
+        - zoxide
+        - tree-sitter-cli
     curl: []
 
 

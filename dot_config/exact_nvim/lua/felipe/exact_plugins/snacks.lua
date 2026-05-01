@@ -4,7 +4,7 @@ local function colorscript()
 	if felipe.isWin then
 		return "/c/users/felipe/.colorscripts/colorscript.sh -e square"
 	else
-		return "colorscript -e square"
+		return "colorscript -e square | lolcat -p 3 -F 0.25 -at -d 4"
 	end
 end
 

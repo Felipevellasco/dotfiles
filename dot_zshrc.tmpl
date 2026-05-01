@@ -4,7 +4,7 @@
 # Start profiling
 __profile_start=$(date +%s%3N)
 
-source "$HOME/shell/environment"
+source "$HOME/.config/shell/environment"
 
 # Load Starship (Immediate load for prompt visibility)
 eval "$(starship init zsh)"
@@ -17,7 +17,7 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
-# --- Plugins ---
+# --- Plugins --- #
 
 # {{- if not .wsl }}
 # Plugin made the shell sluggish on WSL
@@ -49,7 +49,7 @@ zinit snippet OMZP::command-not-found
 zinit ice wait'0' lucid atinit'zpcompinit; zpcdreplay'
 zinit light Aloxaf/fzf-tab
 
-# --- Configuration ---
+# --- Configuration --- #
 
 # History persistence
 HISTSIZE=1000
@@ -69,15 +69,22 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-# --- Functions and aliases ---
+# --- Functions and aliases --- #
 
-source "$HOME/shell/common"
+source "$HOME/.config/shell/common"
 
-# --- Activation ---
+# --- Splash screen --- #
 
-# Homebrew Setup
-if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+splash="$HOME/.config/shell/splash"
+
+# Show splash if:
+# 1. SSH CASE: Run only on the first shell of an SSH connection
+if [ -n "$SSH_CONNECTION" ] && [ "$SHLVL" -eq 1 ]; then
+    bash "$splash"
+
+# 2. LOCAL CASE: Run only on the first shell of a local session, but NOT inside TMUX
+elif [ -z "$SSH_CONNECTION" ] && [ "$SHLVL" -eq 1 ] && [ -z "$TMUX" ]; then
+    bash "$splash"
 fi
 
 # End profiling
