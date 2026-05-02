@@ -56,7 +56,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- word under your cursor when your cursor rests there for a little while.
 --    See `:help CursorHold` for information about when this is executed
 vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
+	group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = false }),
 	callback = function(event)
 		local client = vim.lsp.get_client_by_id(event.data.client_id)
 		if client and client:supports_method("textDocument/documentHighlight", event.buf) then
