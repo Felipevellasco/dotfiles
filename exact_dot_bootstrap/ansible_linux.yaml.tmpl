@@ -58,7 +58,14 @@
 # [[- if .hasGUI ]]
 - name: Install Homebrew GUI packages
   community.general.homebrew:
-    name: "{{ packages.gui.homebrew }}"
+    name: "{{ packages.gui.homebrew.common }}"
+    state: present
+  when: gui | default(false)
+  become: no
+
+- name: Install missing/outdated apt GUI packages
+  community.general.homebrew:
+    name: "{{ packages.gui.homebrew.apt }}"
     state: present
   when: gui | default(false)
   become: no

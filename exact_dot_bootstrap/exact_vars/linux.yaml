@@ -20,16 +20,17 @@ packages:
       - cargo
       - mediainfo
       - lolcat
-      - ncal
       - figlet
       - toilet
     apt:
       - build-essential
+      - wireguard
       - ruby-full
       - python-is-python3
       - poppler-utils
       - fd-find
       - openssh-server
+      - ncal
     pacman:
       - neovim
       - yazi
@@ -44,6 +45,7 @@ packages:
       - fzf
       - zoxide
       - tree-sitter-cli
+      - wireguard-tools
     homebrew:
       common:
         - node
@@ -64,14 +66,13 @@ packages:
   gui:
     common:
       - firefox
-      - vivaldi
     apt: []
       # - ghostty # should be installed through homebrew or curl.
     pacman:
       - ttf-jetbrains-mono-nerd
     homebrew:
-      common:
-        - ghostty
+      common: []
+        # - ghostty # macOS is required for this package (??)
       apt: []
 
 ...
