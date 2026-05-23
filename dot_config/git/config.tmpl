@@ -7,23 +7,42 @@
 	autocrlf = input
 {{- end }}
 
+[init]
+	defaultBranch = main
+
 [user]
 	name = Felipe Vellasco
 	email = vellascofelipe@gmail.com
+
 [diff]
-	tool = vscode
+	prompt = true
+[difftool]
+	tool = nvimdiff
+
+[difftool "nvimdiff"]
+	cmd = "nvim -d \"$REMOTE\" \"$LOCAL\""
 [difftool "vscode"]
 	cmd = "code --wait --diff $LOCAL $REMOTE"
+
+[merge]
+	conflictStyle = "zdiff3"
+[merge "mergiraf"]
+	name = mergiraf
+	driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
+
+[pull]
+	rebase = true
+
 [i18n]
 	logOutputEncoding = utf-8
+
 [alias]
 	pr = pull --rebase
-	s = status -s
-	ss = status
+	s = status
 	a = add -A
-	l = log --oneline --graph --all
-	ll = log
+	l = log --graph --all
 	c = commit
+
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true

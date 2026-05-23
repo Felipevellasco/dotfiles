@@ -9,7 +9,7 @@ DateColumn=34 # Default is 27 for 80 character line, 34 for 92 character line
 TimeColumn=61 # Default is 49 for   "   "   "   "    61 "   "   "   "
 
 # Replace Edmonton with your city name, GPS, etc. See: curl wttr.in/:help
-curl wttr.in/?0 --silent --max-time 3 > /tmp/now-weather
+curl wttr.in/?0 --silent --max-time 1 > /tmp/now-weather
 # Timeout #. Increase for slow connection---^
 
 readarray aWeather < /tmp/now-weather
@@ -26,7 +26,7 @@ else
     echo "| Check reason with command: |"
     echo "|                            |"
     echo "| curl wttr.in/?0 --silent   |" # Replace Edmonton with your city
-    echo "|   --max-time 3             |"
+    echo "|   --max-time 1             |"
     echo "+============================+"
     echo " "
 fi
@@ -74,6 +74,10 @@ while IFS= read -r Cal; do
         for (( j=0 ; j <= 18 ; j += 3 )) ; do
             Test=${Cal:$j:2}            # Current day on calendar line
             if [[ "$Test" == "$Today" ]] ; then
+                # {{ if eq .distro "arch" }}
+                tput cuf 2
+                # {{ end }}
+
                 printf "\033[7m"        # Reverse: [ 7 m
                 printf "%s" "$Today"
                 printf "\033[0m"        # Normal: [ 0 m

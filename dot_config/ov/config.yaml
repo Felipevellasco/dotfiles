@@ -1,0 +1,24 @@
+keybind:
+  down:
+    - "Down"
+    - "j"
+  up:
+    - "Up"
+    - "k"
+
+  page_half_down:
+    - "PageDown"
+    - "ctrl+d"
+    - "J"
+  page_half_up:
+    - "PageUp"
+    - "ctrl+u"
+    - "K"
+
+  top:
+    - "g"
+  bottom:
+    - "G"
+
+  edit:
+    - "e"

@@ -14,6 +14,21 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_CACHE_HOME="$HOME/.cache"
 
+export HOSTNAME="$(/usr/bin/uname -n)"
+
 if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+#### Keychain
+# Initialize keychain without forcing a password prompt immediately
+# {{- if .ssh }}
+/usr/bin/keychain --clear --noask > /dev/null 2>&1
+# {{ else }}
+/usr/bin/keychain --noask > /dev/null 2>&1
+# {{ end -}}
+
+# Source the environment file so this terminal session can find the agent
+if [ -f "$HOME/.keychain/$HOSTNAME-sh" ]; then
+    . "$HOME/.keychain/$HOSTNAME-sh"
 fi

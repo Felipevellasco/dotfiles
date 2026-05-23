@@ -104,6 +104,10 @@ vim.o.confirm = true
 
 -- Load custom configurations
 require("felipe.core")
+local felipe = require("felipe.core.globals")
+
+-- Disable Nvim-Ghost autostart
+vim.g.nvim_ghost_autostart = 0
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -182,6 +186,12 @@ require("lazy").setup({
 		},
 	},
 })
+
+if not felipe.isCode then
+	if vim.fn.argc() == 0 then
+		vim.cmd("normal! <leader>ug")
+	end
+end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 ft=lua et

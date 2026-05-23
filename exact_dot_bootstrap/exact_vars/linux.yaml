@@ -22,6 +22,7 @@ packages:
       - lolcat
       - figlet
       - toilet
+      - eza
     apt:
       - build-essential
       - wireguard
@@ -46,6 +47,8 @@ packages:
       - zoxide
       - tree-sitter-cli
       - wireguard-tools
+      - lazygit
+      - mergiraf
     homebrew:
       common:
         - node
@@ -53,6 +56,7 @@ packages:
         - platformio
         - chezmoi
         - fastfetch
+        - ov
       apt:
         - starship
         - neovim
@@ -60,6 +64,8 @@ packages:
         - fzf
         - zoxide
         - tree-sitter-cli
+        - jesseduffield/lazygit/lazygit
+        - mergiraf
     curl: []
 
 

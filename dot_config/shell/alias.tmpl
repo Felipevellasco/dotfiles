@@ -1,18 +1,40 @@
 #!/usr/bin/env bash
 # vim: filetype=sh :
 
-alias ls='ls -lAr --color'
-alias grep='grep -in --color=auto'
-# alias z='cd'
-# alias zi='cdi'
+alias grep='\grep -in --color=auto'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias py='python'
-alias cat='bat'
 alias c='clear'
 alias Q='exit'
+alias gs='git status --short'
+alias gl='git log --oneline --graph --all'
 
 alias dotfiles-install='ansible-playbook $HOME/.bootstrap/ansible.yaml --ask-become-pass'
+alias weather='curl wttr.in --silent --max-time 3'
+
+if command -v bat &>/dev/null; then
+    alias cat='bat'
+elif command -v batcat &>/dev/null; then
+    alias cat='batcat'
+fi
+
+_lsr_tree() {
+    local level="${1:-2}"
+    eza -lTagh --level="$level" --color=always --icons=always --git | ov -X
+}
+
+_lsr_fallback(){
+    ls
+}
+
+if command -v eza &>/dev/null; then
+    alias ls='eza -lagh --color=auto --icons=auto --git'
+    alias lsr='_lsr_tree'
+else
+    alias ls='\ls -lhA --color=auto'
+    alias lsr='_lsr_fallback'
+fi
 
 # {{- if .wsl }}
 # Configure WSL alias so most files can be opened from Windows instead
@@ -39,9 +61,12 @@ venv() {
     if [ -f "./.venv/bin/activate" ]; then
         echo "Activating virtual environment..."
         source "./.venv/bin/activate"
+
+    # Windows version
     elif [ -f "./.venv/scripts/activate" ]; then
         echo "Activating virtual environment..."
         source "./.venv/scripts/activate"
+
     else
         echo "No virtual environment found in this directory."
     fi

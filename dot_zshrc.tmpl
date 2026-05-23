@@ -46,7 +46,7 @@ zinit ice wait'0' lucid
 zinit snippet OMZP::command-not-found
 
 # Final completion kickstart - Run ONLY ONCE after plugins load
-zinit ice wait'0' lucid atinit'zpcompinit; zpcdreplay'
+zinit ice wait'0' lucid atinit'zpcompinit; zpcdreplay; unalias zi zini zpl zplg' # Unalias removes conflicting keybindings
 zinit light Aloxaf/fzf-tab
 
 # --- Configuration --- #

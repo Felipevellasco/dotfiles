@@ -1,8 +1,9 @@
 # A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
 # If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
-"$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
+#:schema https://yazi-rs.github.io/schemas/keymap.json
 
 [mgr]
+# User keymaps
 prepend_keymap = [
   # Plugin: Relative Motions
   { on = "1", run = "plugin relative-motions 1", desc = "Move in relative steps" },
@@ -17,6 +18,9 @@ prepend_keymap = [
 
   # Plugin: Ouch
   { on = ["g", "k"], run = "plugin ouch", desc = "Compress with Ouch" },
+
+  # Plugin: Git Root
+  { on = ["g", "r"], run = "plugin cd-git-root", desc = "Go to repository root"},
 ]
 
 keymap = [
