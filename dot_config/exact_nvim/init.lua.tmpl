@@ -86,6 +86,7 @@ vim.o.splitbelow = true
 --   and `:help lua-options-guide`
 vim.o.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.opt.fillchars:append({ diff = "╱" })
 vim.o.conceallevel = 1
 
 -- Preview substitutions live, as you type!
