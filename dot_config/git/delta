@@ -1,0 +1,10 @@
+# vim: ft=gitconfig
+
+[delta]
+  navigate = true
+  light = false
+  dark = true
+  line-numbers = true
+
+[interactive]
+  diffFilter = delta --color-only

@@ -1,10 +1,29 @@
-#!/usr/bin/env bash
-# vim: filetype=bash :
+#!/usr/bin/env zsh
+# vim: ft=zsh :
 
 # Start profiling
 __profile_start=$(date +%s%3N)
 
 source "$HOME/.config/shell/environment"
+mkdir -p "$XDG_CACHE_HOME/zsh"
+
+# History persistence
+SAVEHIST=$HISTSIZE
+setopt appendhistory sharehistory hist_ignore_space hist_ignore_all_dups hist_save_no_dups
+
+# --- Splash screen --- #
+
+setopt localoptions no_monitor # Ensure no PID logs are left behind (temporary)
+pid_splash=""
+
+if [ "$SHLVL" -eq 1 ]; then
+    splash="$HOME/.config/shell/splash"
+    splash_txt=$(mktemp -p /dev/shm/ splash.XXXXXXXXXX)
+    trap 'rm -f "$splash_txt"' EXIT INT TERM ERR
+
+    source "$splash" > "$splash_txt" 2>/dev/null &
+    pid_splash=$!
+fi
 
 # Load Starship (Immediate load for prompt visibility)
 eval "$(starship init zsh)"
@@ -12,10 +31,14 @@ eval "$(starship init zsh)"
 # Configure ZINIT
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 if [ ! -d "$ZINIT_HOME" ]; then
+    echo "Cloning Zinit..."
     mkdir -p "$(dirname $ZINIT_HOME)"
     git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    echo "Done."
 fi
 source "${ZINIT_HOME}/zinit.zsh"
+
+ZINIT[ZCOMPDUMP_PATH]="${SHCACHE:-$XDG_CACHE_HOME/zsh}/zcompdump"
 
 # --- Plugins --- #
 
@@ -34,10 +57,9 @@ zinit light zsh-users/zsh-autosuggestions
 # Standard Shell Integrations
 source <(fzf --zsh)
 eval "$(zoxide init zsh)"
+eval "$(direnv hook zsh)"
 
 # Snippets from Oh-My-Zsh
-zinit ice wait'0' lucid
-zinit snippet OMZP::git
 zinit ice wait'0' lucid
 zinit snippet OMZP::sudo
 zinit ice wait'0' lucid
@@ -46,46 +68,38 @@ zinit ice wait'0' lucid
 zinit snippet OMZP::command-not-found
 
 # Final completion kickstart - Run ONLY ONCE after plugins load
-zinit ice wait'0' lucid atinit'zpcompinit; zpcdreplay; unalias zi zini zpl zplg' # Unalias removes conflicting keybindings
+zinit ice wait'0' lucid atinit"zpcompinit; zpcdreplay; unalias zi zini zpl zplg 2>/dev/null" # Unalias removes conflicting keybindings
 zinit light Aloxaf/fzf-tab
 
 # --- Configuration --- #
 
-# History persistence
-HISTSIZE=1000
-HISTFILE=~/.zsh_history
-SAVEHIST=$HISTSIZE
-setopt appendhistory sharehistory hist_ignore_space hist_ignore_all_dups hist_save_no_dups
-
 # Keybindings
-bindkey -e
+bindkey -v # Vi keybindings, yay!
 bindkey '^j' history-search-forward
 bindkey '^k' history-search-backward
+bindkey -M viins '^f' autosuggest-accept
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+zstyle ':fzf-tab:complete:cd:*' fzf-preview ${(Q)listCommand}
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview ${(Q)listCommand}
 
 # --- Functions and aliases --- #
 
-source "$HOME/.config/shell/common"
+source "$HOME/.config/shell/alias"
 
-# --- Splash screen --- #
+# --- Print splash screen to the terminal --- #
 
-splash="$HOME/.config/shell/splash"
+if [[ -n $pid_splash ]]; then
+    wait "$pid_splash" 2>/dev/null
 
-# Show splash if:
-# 1. SSH CASE: Run only on the first shell of an SSH connection
-if [ -n "$SSH_CONNECTION" ] && [ "$SHLVL" -eq 1 ]; then
-    bash "$splash"
-
-# 2. LOCAL CASE: Run only on the first shell of a local session, but NOT inside TMUX
-elif [ -z "$SSH_CONNECTION" ] && [ "$SHLVL" -eq 1 ] && [ -z "$TMUX" ]; then
-    bash "$splash"
+    printf "%s\n\n" "$(< $splash_txt)"
 fi
+
+unsetopt localoptions no_monitor
 
 # End profiling
 __profile_end=$(date +%s%3N)

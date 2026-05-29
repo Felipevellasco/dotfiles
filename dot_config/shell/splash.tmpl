@@ -1,137 +1,99 @@
 #!/usr/bin/env bash
 # vim: ft=bash :
 
-# Splash screen based on:
-# https://askubuntu.com/questions/1020692/terminal-splash-screen-with-weather-calendar-time-sysinfo
+# colors 00=bright white, 31=red, 32=green, 33=yellow, 34=blue, 35=purple,
+#        36=cyan, 37=white
+CAL_COLOR="94"
+CLOCK_COLOR="01;36"
 
-# Setup for 92 character wide terminal
-DateColumn=34 # Default is 27 for 80 character line, 34 for 92 character line
-TimeColumn=61 # Default is 49 for   "   "   "   "    61 "   "   "   "
+DateColumn=42
+WeatherColumn=68
 
-# Replace Edmonton with your city name, GPS, etc. See: curl wttr.in/:help
-curl wttr.in/?0 --silent --max-time 1 > /tmp/now-weather
-# Timeout #. Increase for slow connection---^
+SPLASH_TMP=$(mktemp -d /dev/shm/splash.XXXXXXXXXX)
+trap 'rm -rf "$SPLASH_TMP"' EXIT INT TERM ERR
 
-readarray aWeather < /tmp/now-weather
-rm -f /tmp/now-weather
+TMP_CAL=$(mktemp "$SPLASH_TMP"/calendar.XXXXXXXXXX)
+TMP_CLOCK=$(mktemp "$SPLASH_TMP"/clock-now.XXXXXXXXXX)
+TMP_WEATHER=$(mktemp "$SPLASH_TMP"/now-weather.XXXXXXXXXX)
+TMP_FASTFETCH=$(mktemp "$SPLASH_TMP"/fastfetch.XXXXXXXXXX)
 
-# Was valid weather report found or an error message?
-if [[ "${aWeather[0]}" == "Weather report:"* ]] ; then
-    WeatherSuccess=true
-    echo "${aWeather[@]}"
-else
-    WeatherSuccess=false
-    echo "+============================+"
-    echo "| Weather unavailable now!!! |"
-    echo "| Check reason with command: |"
-    echo "|                            |"
-    echo "| curl wttr.in/?0 --silent   |" # Replace Edmonton with your city
-    echo "|   --max-time 1             |"
-    echo "+============================+"
-    echo " "
-fi
-echo " "                # Pad blank lines for calendar & time to fit
+get-date() {
+  cal --color=always |\
+  sed -E "3,8s/\[0m/\[0m\x1b[${CAL_COLOR}m/" |\
+  sed -E "s/^/\x1b\[${CAL_COLOR}m/" |\
+  sed -E "s/$/\x1b\[0m/" |\
+  /bin/cat > "$TMP_CAL"
+}
+
+get-time() {
+  # echo " $(date +"%H:%M") "  |\ # 24H clock option
+  echo " $(date +"%I:%M %P") " |\
+  toilet -f future --filter border |\
+  sed "s/^/    \x1b[${CLOCK_COLOR}m/" > "$TMP_CLOCK"
+}
+
+get-weather() {
+  curl "wttr.in/?0" -sm 1 |\
+  sed '1s/,.*//' > "$TMP_WEATHER" # You can use sed to remove the text after the city name
+  # sed $'1s/, /\\
+  #   /' > "$TMP_WEATHER" # Or you can break the line and show the region below
+
+  # Was valid weather report found or an error message?
+  grep -q "Weather report:" "$TMP_WEATHER" || /bin/cat <<'EOF' > "$TMP_WEATHER"
++============================+
+| Weather unavailable now!!! |
+| Check reason with command: |
+|                            |
+|   curl wttr.in/?0 -sm 1    |
+|                            |
++============================+
+EOF
+
+  sed -iE "s/^/\x1b\[0m/" "$TMP_WEATHER"
+}
+
+get-ff() {
+  fastfetch --pipe false >> "$TMP_FASTFETCH"
+}
+
+# Start gathering info concurrently
+get-weather &
+pid_weather=$!
+get-date &
+pid_date=$!
+get-time &
+pid_time=$!
+get-ff &
+pid_ff=$!
+
+wait $pid_time
+printf '\n%s\n\n' "$(< "$TMP_CLOCK")"
 
 #--------- DATE -------------------------------------------------------------
 
-# calendar current month with today highlighted.
-# colors 00=bright white, 31=red, 32=green, 33=yellow, 34=blue, 35=purple,
-#        36=cyan, 37=white
-
 tput sc                 # Save cursor position.
-# Move up 9 lines
-i=0
-while [ $((++i)) -lt 10 ]; do tput cuu1; done
 
-if [[ "$WeatherSuccess" == true ]] ; then
-    # Depending on length of your city name and country name you will:
-    #   1. Comment out next three lines of code. Uncomment fourth code line.
-    #   2. Change subtraction value and set number of print spaces to match
-    #      subtraction value. Then place comment on fourth code line.
-    Column=$((DateColumn - 10))
-    tput cuf $Column        # Move x column number
-    # Blank out ", country" with x spaces
-    printf "          "
-else
-    tput cuf $DateColumn    # Position to column 27 for date display
-fi
+# Move up and right
+printf "\e[9A\e[${DateColumn}G"
 
-# -h needed to turn off formating: https://askubuntu.com/questions/1013954/bash-substring-stringoffsetlength-error/1013960#1013960
-cal > /tmp/terminal1
-# -h not supported in Ubuntu 18.04. Use second answer: https://askubuntu.com/a/1028566/307523
-tr -cd '\11\12\15\40\60-\136\140-\176' < /tmp/terminal1  > /tmp/terminal
+wait $pid_date
+while IFS= read -r Date; do
+  printf "\e[${DateColumn}G%s\e[1B" "$Date"
+done < "$TMP_CAL"
 
-CalLineCnt=1
-Today=$(date +"%e")
+#-------- WEATHER ------------------------------------------------------------
 
-printf "\033[94m"   # color green -- see list above.
+# Move up and right
+printf "\e[9A\e[${WeatherColumn}G"
 
-while IFS= read -r Cal; do
-    printf "%s" "$Cal"
-    if [[ $CalLineCnt -gt 2 ]] ; then
-        # See if today is on current line & invert background
-        tput cub 22
-        for (( j=0 ; j <= 18 ; j += 3 )) ; do
-            Test=${Cal:$j:2}            # Current day on calendar line
-            if [[ "$Test" == "$Today" ]] ; then
-                # {{ if eq .distro "arch" }}
-                tput cuf 2
-                # {{ end }}
-
-                printf "\033[7m"        # Reverse: [ 7 m
-                printf "%s" "$Today"
-                printf "\033[0m"        # Normal: [ 0 m
-                printf "\033[94m"       # color green -- see list above.
-                tput cuf 1
-            else
-                tput cuf 3
-            fi
-        done
-    fi
-
-    tput cud1               # Down one line
-    tput cuf $DateColumn    # Move 27 columns right
-    CalLineCnt=$((++CalLineCnt))
-done < /tmp/terminal
-
-printf "\033[00m"           # color -- bright white (default)
-echo ""
+wait $pid_weather
+while IFS= read -r Weather; do
+  printf "\e[${WeatherColumn}G%s\e[1B" "$Weather"
+done < "$TMP_WEATHER"
 
 tput rc                     # Restore saved cursor position.
 
-#-------- TIME --------------------------------------------------------------
+#-------- FASTFETCH ---------------------------------------------------------
 
-tput sc                 # Save cursor position.
-# Move up 8 lines
-i=0
-while [ $((++i)) -lt 9 ]; do tput cuu1; done
-tput cuf $TimeColumn    # Move 49 columns right
-
-# Do we have the toilet package?
-if hash toilet 2>/dev/null; then
-    echo " $(date +"%I:%M %P") " | \
-        toilet -f future --filter border > /tmp/terminal
-# Do we have the figlet package?
-elif hash figlet 2>/dev/null; then
-#    echo $(date +"%I:%M %P") | figlet > /tmp/terminal
-    date +"%I:%M %P" | figlet > /tmp/terminal
-# else use standard font
-else
-#    echo $(date +"%I:%M %P") > /tmp/terminal
-    date +"%I:%M %P" > /tmp/terminal
-fi
-
-while IFS= read -r Time; do
-    printf "\033[01;36m"    # color cyan
-    printf "%s" "$Time"
-    tput cud1               # Up one line
-    tput cuf $TimeColumn    # Move 49 columns right
-done < /tmp/terminal
-
-tput rc                     # Restore saved cursor position.
-
-#-------- fastfetch ---------------------------------------------------------
-
-exec fastfetch
-
-exit 0
+wait $pid_ff
+printf '\n\n%s\n' "$(< "$TMP_FASTFETCH")"

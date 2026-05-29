@@ -6,12 +6,12 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias py='python'
 alias c='clear'
-alias Q='exit'
 alias gs='git status --short'
 alias gl='git log --oneline --graph --all'
+alias g='lazygit'
 
 alias dotfiles-install='ansible-playbook $HOME/.bootstrap/ansible.yaml --ask-become-pass'
-alias weather='curl wttr.in --silent --max-time 3'
+alias weather='curl wttr.in --silent --max-time 5'
 
 if command -v bat &>/dev/null; then
     alias cat='bat'
@@ -19,21 +19,17 @@ elif command -v batcat &>/dev/null; then
     alias cat='batcat'
 fi
 
-_lsr_tree() {
+_eza_tree() {
     local level="${1:-2}"
-    eza -lTagh --level="$level" --color=always --icons=always --git | ov -X
-}
-
-_lsr_fallback(){
-    ls
+    eza -lTagh --level="$level" --color=always --icons=always --git | ov -FX
 }
 
 if command -v eza &>/dev/null; then
     alias ls='eza -lagh --color=auto --icons=auto --git'
-    alias lsr='_lsr_tree'
+    alias lsr='_eza_tree'
 else
     alias ls='\ls -lhA --color=auto'
-    alias lsr='_lsr_fallback'
+    alias lsr='\ls -lhAR --color=auto'
 fi
 
 # {{- if .wsl }}

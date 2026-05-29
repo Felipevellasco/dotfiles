@@ -1,23 +1,27 @@
 # vim: ft=gitconfig
+[user]
+	name = Felipe Vellasco
+	email = vellascofelipe@gmail.com
+
 [core]
 	editor = "nvim"
+	pager = delta --side-by-side
 {{- if eq .chezmoi.os "windows" }}
 	autocrlf = true
 {{- else }}
 	autocrlf = input
 {{- end }}
 
+[include]
+	path = ~/.config/git/delta
+
 [init]
 	defaultBranch = main
 
-[user]
-	name = Felipe Vellasco
-	email = vellascofelipe@gmail.com
-
 [diff]
 	prompt = true
-[difftool]
 	tool = nvimdiff
+	guitool = vscode
 
 [difftool "nvimdiff"]
 	cmd = "nvim -d \"$REMOTE\" \"$LOCAL\""

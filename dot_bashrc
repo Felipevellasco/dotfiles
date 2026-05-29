@@ -5,7 +5,25 @@
 __profile_start=$(date +%s%3N)
 
 # --- Common environment --- #
-source "$HOME/.config/shell/common"
+source "$HOME/.config/shell/environment"
+
+HISTFILE="$BASH_HISTFILE"
+
+# --- Splash screen --- #
+
+splash="$HOME/.config/shell/splash"
+splash_txt=$(mktemp -p /dev/shm/ splash.XXXXXXXXXX)
+trap 'rm -f "$splash_txt"' EXIT INT TERM ERR
+pid_splash=""
+
+if [ "$SHLVL" -eq 1 ]; then
+    splash="$HOME/.config/shell/splash"
+    splash_txt=$(mktemp -p /dev/shm/ splash.XXXXXXXXXX)
+    trap 'rm -f "$splash_txt"' EXIT INT TERM ERR
+
+    source "$splash" > "$splash_txt" 2>/dev/null &
+    pid_splash=$!
+fi
 
 # --- Starship --- #
 eval "$(starship init bash)"
@@ -16,32 +34,19 @@ eval "$(starship init bash)"
 [ -f /etc/bash_completion ] && . /etc/bash_completion
 [ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
-# Load shell environment variables
-source "$HOME/.config/shell/environment"
-
 eval "$(zoxide init bash)"
 eval "$(fzf --bash)"
+eval "$(direnv hook bash)"
 
-# Calls for colorscript
-# alias colorscript="bash ~/.colorscripts/colorscript.sh"
-# export DIR_COLORSCRIPTS="$HOME/.colorscripts/colorscripts"
-# export PATH="$HOME/.local/bin:$PATH"
+# Load aliases
+source "$HOME/.config/shell/alias"
 
-# opencode
-# export PATH=/c/Users/Felipe/.opencode/bin:$PATH
+# --- Print splash screen to the terminal --- #
 
-# --- Splash screen --- #
+if [[ -n $pid_splash ]]; then
+    wait "$pid_splash" 2>/dev/null
 
-splash="$HOME/.config/shell/splash"
-
-# Show splash if:
-# 1. SSH CASE: Run only on the first shell of an SSH connection
-if [ -n "$SSH_CONNECTION" ] && [ "$SHLVL" -eq 1 ]; then
-    bash "$splash"
-
-# 2. LOCAL CASE: Run only on the first shell of a local session, but NOT inside TMUX
-elif [ -z "$SSH_CONNECTION" ] && [ "$SHLVL" -eq 1 ] && [ -z "$TMUX" ]; then
-    bash "$splash"
+    /bin/cat "$splash_txt"
 fi
 
 # End profiling

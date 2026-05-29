@@ -13,6 +13,17 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_PROJECTS_DIR="$HOME/projects"
+
+export SHCACHE="$XDG_STATE_HOME/shell"
+export HISTSIZE=1000
+export HISTFILE="$SHCACHE/zsh_history"
+export BASH_HISTFILE="$SHCACHE/bash_history"
+
+export NODE_REPL_HISTORY="$XDG_STATE_HOME/node_repl_history"
+export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
+export ANSIBLE_HOME="$XDG_CONFIG_HOME/ansible"
+export ANSIBLE_LOCAL_TEMP_DIR="$XDG_CACHE_HOME/ansible"
 
 export HOSTNAME="$(/usr/bin/uname -n)"
 
@@ -23,12 +34,16 @@ fi
 #### Keychain
 # Initialize keychain without forcing a password prompt immediately
 # {{- if .ssh }}
-/usr/bin/keychain --clear --noask > /dev/null 2>&1
+/usr/bin/keychain --dir "$XDG_CONFIG_HOME/keychain" --clear --noask > /dev/null 2>&1
 # {{ else }}
-/usr/bin/keychain --noask > /dev/null 2>&1
+/usr/bin/keychain --dir "$XDG_CONFIG_HOME/keychain" --noask > /dev/null 2>&1
 # {{ end -}}
 
 # Source the environment file so this terminal session can find the agent
-if [ -f "$HOME/.keychain/$HOSTNAME-sh" ]; then
-    . "$HOME/.keychain/$HOSTNAME-sh"
+if [ -f "$XDG_CONFIG_HOME/keychain/$HOSTNAME-sh" ]; then
+    . "$XDG_CONFIG_HOME/keychain/$HOSTNAME-sh"
+fi
+
+if [ -f "$XDG_CONFIG_HOME/shell/environment_local" ]; then
+    . "$XDG_CONFIG_HOME/shell/environment_local"
 fi
