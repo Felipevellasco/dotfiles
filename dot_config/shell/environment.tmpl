@@ -19,6 +19,7 @@ export SHCACHE="$XDG_STATE_HOME/shell"
 export HISTSIZE=1000
 export HISTFILE="$SHCACHE/zsh_history"
 export BASH_HISTFILE="$SHCACHE/bash_history"
+export zcompdump_filepath="${SHCACHE:-$XDG_CACHE_HOME/zsh}"
 
 export NODE_REPL_HISTORY="$XDG_STATE_HOME/node_repl_history"
 export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"

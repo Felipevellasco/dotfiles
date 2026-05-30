@@ -5,7 +5,17 @@
 __profile_start=$(date +%s%3N)
 
 source "$HOME/.config/shell/environment"
-mkdir -p "$XDG_CACHE_HOME/zsh"
+source "$HOME/.config/shell/alias"
+
+if [[ -f "$XDG_CONFIG_HOME/shell/alias-local" ]]; then
+    source "$XDG_CONFIG_HOME/shell/alias-local"
+fi
+
+if [[ -f "$XDG_CONFIG_HOME/shell/environment-local" ]]; then
+    source "$XDG_CONFIG_HOME/shell/environment-local"
+fi
+
+mkdir -p "$zcompdump_home"
 
 # History persistence
 SAVEHIST=$HISTSIZE
@@ -38,7 +48,7 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
-ZINIT[ZCOMPDUMP_PATH]="${SHCACHE:-$XDG_CACHE_HOME/zsh}/zcompdump"
+ZINIT[ZCOMPDUMP_PATH]="$zcompdump_home/zcompdump"
 
 # --- Plugins --- #
 
@@ -86,10 +96,6 @@ zstyle ':completion:*' menu no
 
 zstyle ':fzf-tab:complete:cd:*' fzf-preview ${(Q)listCommand}
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview ${(Q)listCommand}
-
-# --- Functions and aliases --- #
-
-source "$HOME/.config/shell/alias"
 
 # --- Print splash screen to the terminal --- #
 
