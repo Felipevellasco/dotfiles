@@ -15,7 +15,7 @@ if [[ -f "$XDG_CONFIG_HOME/shell/environment-local" ]]; then
     source "$XDG_CONFIG_HOME/shell/environment-local"
 fi
 
-mkdir -p "$zcompdump_home"
+mkdir -p "$zcompdump_filepath"
 
 # History persistence
 SAVEHIST=$HISTSIZE
@@ -48,7 +48,7 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
-ZINIT[ZCOMPDUMP_PATH]="$zcompdump_home/zcompdump"
+ZINIT[ZCOMPDUMP_PATH]="$zcompdump_filepath/zcompdump"
 
 # --- Plugins --- #
 
