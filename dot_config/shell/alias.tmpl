@@ -68,3 +68,18 @@ venv() {
         echo "No virtual environment found in this directory."
     fi
 }
+
+osc52() {
+    local base64_content
+    base64_content=$(base64 | tr -d '\r\n')
+
+    if [ -z "$base64_content" ]; then
+        return
+    fi
+
+    if [ -n "$TMUX" ]; then
+        printf "\ePtmux;\e\e]52;c;%s\a\e\\" "$base64_content"
+    else
+        printf "\e]52;c;%s\a" "$base64_content"
+    fi
+}
