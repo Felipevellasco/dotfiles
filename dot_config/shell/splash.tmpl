@@ -74,7 +74,7 @@ printf '\n%s\n\n' "$(< "$TMP_CLOCK")"
 tput sc                 # Save cursor position.
 
 # Move up and right
-printf "\e[9A\e[${DateColumn}G"
+printf "\e[7A\e[${DateColumn}G"
 
 wait $pid_date
 while IFS= read -r Date; do
@@ -84,7 +84,7 @@ done < "$TMP_CAL"
 #-------- WEATHER ------------------------------------------------------------
 
 # Move up and right
-printf "\e[9A\e[${WeatherColumn}G"
+printf "\e[7A\e[${WeatherColumn}G"
 
 wait $pid_weather
 while IFS= read -r Weather; do
