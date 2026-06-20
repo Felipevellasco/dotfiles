@@ -16,11 +16,12 @@ return {
 		"TmuxNavigatorProcessList",
 	},
 
-	keys = {
-		{ "<M-h>", ":TmuxNavigateLeft<cr>" },
-		{ "<M-j>", ":TmuxNavigateDown<cr>" },
-		{ "<M-k>", ":TmuxNavigateUp<cr>" },
-		{ "<M-l>", ":TmuxNavigateRight<cr>" },
-		{ "<M-\\>", ":TmuxNavigatePrevious<cr>" },
-	},
+	-- Keys on felipe/core/keybindings.lua
+	-- keys = {
+	-- 	{ "<M-h>", ":TmuxNavigateLeft<cr>" },
+	-- 	{ "<M-j>", ":TmuxNavigateDown<cr>" },
+	-- 	{ "<M-k>", ":TmuxNavigateUp<cr>" },
+	-- 	{ "<M-l>", ":TmuxNavigateRight<cr>" },
+	-- 	{ "<M-\\>", ":TmuxNavigatePrevious<cr>" },
+	-- },
 }

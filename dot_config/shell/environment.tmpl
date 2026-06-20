@@ -40,11 +40,17 @@ fi
 /usr/bin/keychain --dir "$XDG_CONFIG_HOME/keychain" --noask > /dev/null 2>&1
 # {{ end -}}
 
-# Source the environment file so this terminal session can find the agent
+# Source the environment files so this terminal session can find the agent
 if [ -f "$XDG_CONFIG_HOME/keychain/$HOSTNAME-sh" ]; then
     . "$XDG_CONFIG_HOME/keychain/$HOSTNAME-sh"
 fi
 
 if [ -f "$XDG_CONFIG_HOME/shell/environment_local" ]; then
     . "$XDG_CONFIG_HOME/shell/environment_local"
+fi
+
+# Other environment loading
+
+if [ -f "$XDG_DATA_HOME/../bin/env" ]; then
+    . "$XDG_DATA_HOME/../bin/env"
 fi
