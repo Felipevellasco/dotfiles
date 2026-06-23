@@ -20,6 +20,12 @@ elif command -v batcat &>/dev/null; then
     alias cat='batcat'
 fi
 
+if command -v __zoxide_z &>/dev/null; then
+    alias __zcd='__zoxide_z'
+else
+    alias __zcd='cd'
+fi
+
 _eza_tree() {
     local level="${1:-2}"
     eza -lTagh --level="$level" --color=always --icons=always --git | ov -FX
@@ -48,7 +54,7 @@ y() {
     yazi "$@" --cwd-file="$tmp"
     cwd=$(<"$tmp")
     if [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        z "$cwd"
+        __zcd "$cwd"
     fi
     rm -f "$tmp"
 }
