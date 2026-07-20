@@ -47,11 +47,22 @@ vim.o.tabstop = 2 -- Number of spaces a <Tab> counts for
 vim.o.shiftwidth = 2 -- Number of spaces for each code indentation level
 vim.o.expandtab = true -- Use spaces instead of tabs
 
+-- Configure auto-indent
+vim.o.autoindent = true
+vim.o.smartindent = true
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = "a"
 
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
+
+-- Wrap line respecting words when line is not wrapped
+vim.o.wrap = true
+vim.o.linebreak = true
+
+-- Add auto word wrap
+vim.opt.textwidth = 120
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -105,7 +116,7 @@ vim.o.confirm = true
 
 -- Load custom configurations
 require("felipe.core")
-local felipe = require("felipe.core.globals")
+-- local felipe = require("felipe.core.globals")
 
 -- Disable Nvim-Ghost autostart
 vim.g.nvim_ghost_autostart = 0
@@ -187,12 +198,6 @@ require("lazy").setup({
 		},
 	},
 })
-
-if not felipe.isCode then
-	if vim.fn.argc() == 0 then
-		vim.cmd("normal! <leader>ug")
-	end
-end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 ft=lua et

@@ -19,13 +19,15 @@ return {
 
 	dependencies = { "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
 
-	completions = {
-		lsp = { enabled = true },
+	opts = {
+		completions = {
+			lsp = { enabled = true },
+		},
+
+		html = { enabled = false },
+		latex = { enabled = true },
+		yaml = { enabled = false },
+		pipe_table = { enabled = true },
+		code = { enabled = true },
 	},
-
-	html = { enabled = false },
-	latex = { enabled = false },
-	yaml = { enabled = false },
-
-	opts = {},
 }

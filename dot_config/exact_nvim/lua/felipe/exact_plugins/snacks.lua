@@ -152,7 +152,7 @@ return {
 
 		input = { enabled = true },
 
-		image = { enabled = true },
+		image = { enabled = false },
 
 		picker = {
 			enabled = true,

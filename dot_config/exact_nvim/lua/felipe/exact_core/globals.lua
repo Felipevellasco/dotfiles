@@ -27,9 +27,7 @@ end
 
 -- Dynamically find obsidian vaults based on a set of specified candidates
 M.obsidianVaults = {
-	{ name = "Pessoal", path = "D:/Obsidian/Brain" },
-	{ name = "Trabalho", path = "D:/Obsidian/Trabalho" },
-	{ name = "Pessoal (fallback)", path = "D:/Documentos/Obsidian/Brain" },
+	{ name = "Main", path = "/mnt/d/Obsidian/Brain" },
 }
 
 M.lspServers = {
